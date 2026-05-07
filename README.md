@@ -14,9 +14,11 @@ Una regla horizontal teal-deep de ancho completo separa el banner del cuerpo. Un
 
 ## Características
 
-- **Bilingüe ES/EN:** toggle único que cambia puesto, etiquetas del formulario y disclaimer.
+- **Bilingüe ES/EN:** toggle único que cambia puesto, etiquetas del formulario, microetiqueta del QR y disclaimer.
 - **Puestos predefinidos** para Business Analyst, Consultant y Manager (regular y senior), más opción personalizada con campos ES/EN independientes.
-- **QR vCard 3.0** que codifica nombre, organización, puesto, celular, correo, sitio web y LinkedIn opcional.
+- **Tres campos de teléfono opcionales:** celular principal, celular alterno, teléfono fijo. Solo aparecen en la firma los que tienen datos llenados.
+- **Iconos de contacto** discretos en color teal-deep (smartphone, handset, sobre, globo) en lugar de etiquetas de texto.
+- **QR vCard 3.0** que codifica nombre, organización, puesto, todos los teléfonos llenados, correo, sitio web y LinkedIn opcional.
 - **LinkedIn no visible:** se incluye solo en el QR para evitar exposición en cadenas de correo reenviadas.
 - **Microetiqueta del QR** debajo del código, adaptada al idioma seleccionado (ES o EN).
 - **Disclaimer monolingüe** según idioma activo, ambas entidades legales nombradas en cada versión.
@@ -63,7 +65,11 @@ Para añadir más puestos, editar el objeto `TITLES` en `index.html` y agregar l
 ├── index.html           App completa: formulario, preview en vivo, lógica
 ├── assets/
 │   ├── logo.png         Logotipo Aditum Consulting 895×165 RGBA, displayed 298×55
-│   └── imago.png        Imago Aditum 160×160 RGBA, usado en el header de la app
+│   ├── imago.png        Imago Aditum 160×160 RGBA, usado en el header de la app
+│   ├── icon-mobile.png  Icono smartphone, 48×48 RGBA, displayed 14×14
+│   ├── icon-phone.png   Icono handset (fijo), 48×48 RGBA, displayed 14×14
+│   ├── icon-mail.png    Icono sobre, 48×48 RGBA, displayed 14×14
+│   └── icon-web.png     Icono globo, 48×48 RGBA, displayed 14×14
 ├── lib/
 │   └── qrcode.js        qrcode-generator v1.4.4 (MIT, Kazuhiko Arase)
 └── README.md            Este archivo
@@ -78,7 +84,7 @@ Para añadir más puestos, editar el objeto `TITLES` en `index.html` y agregar l
 | Nombre | Bahnschrift SemiBold | 16pt | navy `#0A2E5C` |
 | Puesto | Bahnschrift Condensed | 11.5pt | slate `#5A6B7D` |
 | Mini-regla | — | 1px × 60px | teal-deep `#1A6B7A` |
-| Etiquetas M./E./W. | Consolas | 9.5pt | teal-deep `#1A6B7A` |
+| Iconos de contacto | — (asset PNG) | 14×14px | teal-deep `#1A6B7A` |
 | Datos de contacto | Segoe UI | 10.5pt | slate `#5A6B7D` |
 | Código QR | — (generado) | 90×90px | navy/blanco |
 | Microetiqueta QR | Bahnschrift Condensed | 7pt | slate-light `#8895A4` |

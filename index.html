@@ -277,8 +277,18 @@
       </div>
 
       <div class="form-group">
-        <label data-es="Celular" data-en="Mobile phone">Celular</label>
-        <input type="text" id="mobile" placeholder="+52 55 1234 5678">
+        <label data-es="Celular" data-en="Mobile">Celular</label>
+        <input type="text" id="mobile1" placeholder="+52 55 1234 5678">
+      </div>
+
+      <div class="form-group">
+        <label data-es="Celular alterno (opcional)" data-en="Alternate mobile (optional)">Celular alterno (opcional)</label>
+        <input type="text" id="mobile2" placeholder="+1 305 555 0123">
+      </div>
+
+      <div class="form-group">
+        <label data-es="Teléfono fijo (opcional)" data-en="Office phone (optional)">Teléfono fijo (opcional)</label>
+        <input type="text" id="office" placeholder="+52 55 5555 5555">
       </div>
 
       <div class="form-group">
@@ -326,6 +336,9 @@
       IMAGO_URL: (function () {
         const base = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '');
         return base + '/assets/imago.png';
+      })(),
+      ICON_BASE: (function () {
+        return window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '') + '/assets/';
       })(),
       WEBSITE: 'www.aditumconsulting.com',
       WEBSITE_URL: 'https://www.aditumconsulting.com'
@@ -387,8 +400,10 @@
         'ORG:Aditum Consulting',
         'TITLE:' + escapeVCard(data.title)
       ];
-      if (data.mobile) lines.push('TEL;TYPE=CELL,VOICE:' + data.mobile);
-      if (data.email) lines.push('EMAIL;TYPE=WORK:' + data.email);
+      if (data.mobile1) lines.push('TEL;TYPE=CELL,VOICE:' + data.mobile1);
+      if (data.mobile2) lines.push('TEL;TYPE=CELL,VOICE:' + data.mobile2);
+      if (data.office)  lines.push('TEL;TYPE=WORK,VOICE:' + data.office);
+      if (data.email)   lines.push('EMAIL;TYPE=WORK:' + data.email);
       lines.push('URL:' + CONFIG.WEBSITE_URL);
       if (data.linkedin) {
         let ln = data.linkedin.trim();
@@ -421,50 +436,60 @@
       const LEFT_W = 300;
       const RIGHT_W = 140;
       const GAP = 20;
+      const ICON_SIZE = 14;
 
-      const labels = { mobile: 'M.', email: 'E.', web: 'W.' };
       const disclaimer = DISCLAIMER[currentLang];
       const name = escapeHTML(data.name) || '&nbsp;';
       const title = escapeHTML(data.title) || '&nbsp;';
-      const mobile = escapeHTML(data.mobile);
-      const email = escapeHTML(data.email);
+
+      // Helper: build a contact row only if value present
+      // type is the icon name (mobile, phone, mail, web)
+      function row(iconName, alt, content) {
+        return '<tr>'
+          + '<td style="padding:3px 10px 3px 0;vertical-align:middle;width:' + (ICON_SIZE + 2) + 'px;">'
+          +   '<img src="' + CONFIG.ICON_BASE + 'icon-' + iconName + '.png" alt="' + alt + '" width="' + ICON_SIZE + '" height="' + ICON_SIZE + '" style="display:block;border:0;width:' + ICON_SIZE + 'px;height:' + ICON_SIZE + 'px;">'
+          + '</td>'
+          + '<td style="padding:3px 0;vertical-align:middle;">' + content + '</td>'
+          + '</tr>';
+      }
 
       let contactRows = '';
-      if (data.mobile) {
-        contactRows += '<tr><td style="padding:0 8px 0 0;color:' + TEAL + ';font-family:\'Consolas\',\'Courier New\',monospace;font-size:9.5pt;width:24px;vertical-align:top;">' + labels.mobile + '</td><td style="padding:0;">' + mobile + '</td></tr>';
-      }
+      if (data.mobile1) contactRows += row('mobile', 'Mobile', escapeHTML(data.mobile1));
+      if (data.mobile2) contactRows += row('mobile', 'Mobile', escapeHTML(data.mobile2));
+      if (data.office)  contactRows += row('phone',  'Phone',  escapeHTML(data.office));
       if (data.email) {
-        contactRows += '<tr><td style="padding:0 8px 0 0;color:' + TEAL + ';font-family:\'Consolas\',\'Courier New\',monospace;font-size:9.5pt;width:24px;vertical-align:top;">' + labels.email + '</td><td style="padding:0;"><a href="mailto:' + email + '" style="color:' + SLATE + ';text-decoration:none;">' + email + '</a></td></tr>';
+        const emailEsc = escapeHTML(data.email);
+        contactRows += row('mail', 'Email',
+          '<a href="mailto:' + emailEsc + '" style="color:' + SLATE + ';text-decoration:none;">' + emailEsc + '</a>');
       }
-      contactRows += '<tr><td style="padding:0 8px 0 0;color:' + TEAL + ';font-family:\'Consolas\',\'Courier New\',monospace;font-size:9.5pt;width:24px;vertical-align:top;">' + labels.web + '</td><td style="padding:0;"><a href="' + CONFIG.WEBSITE_URL + '" style="color:' + SLATE + ';text-decoration:none;">' + CONFIG.WEBSITE + '</a></td></tr>';
+      contactRows += row('web', 'Website',
+        '<a href="' + CONFIG.WEBSITE_URL + '" style="color:' + SLATE + ';text-decoration:none;">' + CONFIG.WEBSITE + '</a>');
 
       let html = '<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;font-family:\'Segoe UI\',Arial,sans-serif;color:' + SLATE + ';">';
       html +=   '<tr><td style="padding:0;width:' + TOTAL_W + 'px;">';
 
-      // Banner: full logo, left-aligned
+      // Banner: full logo
       html +=     '<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;width:' + TOTAL_W + 'px;">';
       html +=       '<tr><td style="padding:0;"><img src="' + CONFIG.LOGO_URL + '" alt="Aditum Consulting" width="298" height="55" style="display:block;border:0;width:298px;height:55px;"></td></tr>';
       html +=     '</table>';
 
-      // Long horizontal rule, full signature width
+      // Long horizontal rule
       html +=     '<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;width:' + TOTAL_W + 'px;margin-top:14px;">';
       html +=       '<tr><td style="height:1px;background-color:' + TEAL + ';font-size:1px;line-height:1px;">&nbsp;</td></tr>';
       html +=     '</table>';
 
-      // Body: left = name/title/mini-rule/contact, right = QR + microlabel
+      // Body two columns
       html +=     '<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;width:' + TOTAL_W + 'px;margin-top:14px;">';
       html +=       '<tr>';
       html +=         '<td valign="top" style="width:' + LEFT_W + 'px;padding:0;">';
       html +=           '<div style="font-family:\'Bahnschrift SemiBold\',\'Bahnschrift\',\'Segoe UI\',Arial,sans-serif;font-weight:600;font-size:16pt;color:' + NAVY + ';line-height:1.15;letter-spacing:0.2px;">' + name + '</div>';
       html +=           '<div style="font-family:\'Bahnschrift Condensed\',\'Bahnschrift\',\'Arial Narrow\',Arial,sans-serif;font-size:11.5pt;color:' + SLATE + ';line-height:1.2;margin-top:3px;letter-spacing:0.3px;">' + title + '</div>';
-      // Mini-rule: short teal accent
       html +=           '<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;margin:10px 0 9px 0;width:60px;"><tr><td style="height:1px;background-color:' + TEAL + ';font-size:1px;line-height:1px;">&nbsp;</td></tr></table>';
-      html +=           '<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;font-family:\'Segoe UI\',Arial,sans-serif;font-size:10.5pt;color:' + SLATE + ';line-height:1.65;">';
+      html +=           '<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;font-family:\'Segoe UI\',Arial,sans-serif;font-size:10.5pt;color:' + SLATE + ';">';
       html +=             contactRows;
       html +=           '</table>';
       html +=         '</td>';
       html +=         '<td style="width:' + GAP + 'px;padding:0;font-size:1px;line-height:1px;">&nbsp;</td>';
-      // Right: QR + bilingual microlabel
       html +=         '<td valign="top" style="width:' + RIGHT_W + 'px;padding:0;">';
       html +=           '<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">';
       html +=             '<tr><td style="padding:0;"><img src="' + qrDataURL + '" alt="vCard QR" width="90" height="90" style="display:block;border:0;width:90px;height:90px;"></td></tr>';
@@ -475,7 +500,7 @@
       html +=       '</tr>';
       html +=     '</table>';
 
-      // Disclaimer, full width
+      // Disclaimer
       html +=     '<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;width:' + TOTAL_W + 'px;margin-top:16px;">';
       html +=       '<tr><td style="font-family:\'Segoe UI\',Arial,sans-serif;font-size:8pt;line-height:1.5;color:' + SLATE_LIGHT + ';text-align:justify;">' + disclaimer + '</td></tr>';
       html +=     '</table>';
@@ -490,7 +515,9 @@
         name: document.getElementById('name').value.trim(),
         title: getTitle(),
         email: document.getElementById('email').value.trim(),
-        mobile: document.getElementById('mobile').value.trim(),
+        mobile1: document.getElementById('mobile1').value.trim(),
+        mobile2: document.getElementById('mobile2').value.trim(),
+        office: document.getElementById('office').value.trim(),
         linkedin: document.getElementById('linkedin').value.trim()
       };
     }
@@ -548,7 +575,7 @@
     }
 
     // Wire up
-    ['name', 'email', 'mobile', 'linkedin', 'title-custom-es', 'title-custom-en'].forEach(id => {
+    ['name', 'email', 'mobile1', 'mobile2', 'office', 'linkedin', 'title-custom-es', 'title-custom-en'].forEach(id => {
       document.getElementById(id).addEventListener('input', render);
     });
     document.getElementById('title').addEventListener('change', e => {
@@ -559,7 +586,7 @@
     // Sample data on first load
     document.getElementById('name').value = 'María González';
     document.getElementById('email').value = 'maria.gonzalez@aditumconsulting.com';
-    document.getElementById('mobile').value = '+52 55 1234 5678';
+    document.getElementById('mobile1').value = '+52 55 1234 5678';
     document.getElementById('linkedin').value = 'linkedin.com/in/maria-gonzalez';
 
     render();
