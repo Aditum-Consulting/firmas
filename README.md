@@ -81,14 +81,14 @@ Para añadir más puestos, editar el objeto `TITLES` en `index.html` y agregar l
 |---|---|---|---|
 | Logotipo banner | — (asset PNG) | 298×55px | gradient navy/teal/copper |
 | Regla horizontal larga | — | 1px × 460px | teal-deep `#1A6B7A` |
-| Nombre | Bahnschrift SemiBold | 16pt | navy `#0A2E5C` |
-| Puesto | Bahnschrift Condensed | 11.5pt | slate `#5A6B7D` |
+| Nombre | Bahnschrift SemiBold | 14pt | navy `#0A2E5C` |
+| Puesto | Bahnschrift Condensed | 10.5pt | slate `#5A6B7D` |
 | Mini-regla | — | 1px × 60px | teal-deep `#1A6B7A` |
-| Iconos de contacto | — (asset PNG) | 14×14px | teal-deep `#1A6B7A` |
-| Datos de contacto | Segoe UI | 10.5pt | slate `#5A6B7D` |
-| Código QR | — (generado) | 90×90px | navy/blanco |
+| Iconos de contacto | — (asset PNG) | 12×12px | teal-deep `#1A6B7A` |
+| Datos de contacto | Segoe UI | 9.5pt | slate `#5A6B7D` |
+| Código QR | — (generado) | 130×130px | navy/blanco |
 | Microetiqueta QR | Bahnschrift Condensed | 7pt | slate-light `#8895A4` |
-| Disclaimer | Segoe UI | 8pt | slate-light `#8895A4` |
+| Disclaimer | Segoe UI | 7.5pt | slate-light `#8895A4` |
 
 Stack de fuentes con fallback robusto: `'Bahnschrift', 'Arial Narrow', Arial` para Bahnschrift Condensed; `'Segoe UI', Arial` para Segoe UI; `'Consolas', 'Courier New'` para Consolas. Bahnschrift es nativa en todo Windows; en macOS cae a Segoe UI o Arial preservando jerarquía.
 

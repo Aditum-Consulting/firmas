@@ -433,10 +433,10 @@
       const SLATE = '#5A6B7D';
       const SLATE_LIGHT = '#8895A4';
       const TOTAL_W = 460;
-      const LEFT_W = 300;
-      const RIGHT_W = 140;
-      const GAP = 20;
-      const ICON_SIZE = 14;
+      const LEFT_W = 314;
+      const RIGHT_W = 130;
+      const GAP = 16;
+      const ICON_SIZE = 12;
 
       const disclaimer = DISCLAIMER[currentLang];
       const name = escapeHTML(data.name) || '&nbsp;';
@@ -482,17 +482,17 @@
       html +=     '<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;width:' + TOTAL_W + 'px;margin-top:14px;">';
       html +=       '<tr>';
       html +=         '<td valign="top" style="width:' + LEFT_W + 'px;padding:0;">';
-      html +=           '<div style="font-family:\'Bahnschrift SemiBold\',\'Bahnschrift\',\'Segoe UI\',Arial,sans-serif;font-weight:600;font-size:16pt;color:' + NAVY + ';line-height:1.15;letter-spacing:0.2px;">' + name + '</div>';
-      html +=           '<div style="font-family:\'Bahnschrift Condensed\',\'Bahnschrift\',\'Arial Narrow\',Arial,sans-serif;font-size:11.5pt;color:' + SLATE + ';line-height:1.2;margin-top:3px;letter-spacing:0.3px;">' + title + '</div>';
+      html +=           '<div style="font-family:\'Bahnschrift SemiBold\',\'Bahnschrift\',\'Segoe UI\',Arial,sans-serif;font-weight:600;font-size:14pt;color:' + NAVY + ';line-height:1.15;letter-spacing:0.2px;">' + name + '</div>';
+      html +=           '<div style="font-family:\'Bahnschrift Condensed\',\'Bahnschrift\',\'Arial Narrow\',Arial,sans-serif;font-size:10.5pt;color:' + SLATE + ';line-height:1.2;margin-top:3px;letter-spacing:0.3px;">' + title + '</div>';
       html +=           '<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;margin:10px 0 9px 0;width:60px;"><tr><td style="height:1px;background-color:' + TEAL + ';font-size:1px;line-height:1px;">&nbsp;</td></tr></table>';
-      html +=           '<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;font-family:\'Segoe UI\',Arial,sans-serif;font-size:10.5pt;color:' + SLATE + ';">';
+      html +=           '<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;font-family:\'Segoe UI\',Arial,sans-serif;font-size:9.5pt;color:' + SLATE + ';">';
       html +=             contactRows;
       html +=           '</table>';
       html +=         '</td>';
       html +=         '<td style="width:' + GAP + 'px;padding:0;font-size:1px;line-height:1px;">&nbsp;</td>';
       html +=         '<td valign="top" style="width:' + RIGHT_W + 'px;padding:0;">';
       html +=           '<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">';
-      html +=             '<tr><td style="padding:0;"><img src="' + qrDataURL + '" alt="vCard QR" width="90" height="90" style="display:block;border:0;width:90px;height:90px;"></td></tr>';
+      html +=             '<tr><td style="padding:0;"><img src="' + qrDataURL + '" alt="vCard QR" width="130" height="130" style="display:block;border:0;width:130px;height:130px;"></td></tr>';
       html +=             '<tr><td style="height:6px;font-size:1px;line-height:1px;">&nbsp;</td></tr>';
       html +=             '<tr><td style="font-family:\'Bahnschrift Condensed\',\'Bahnschrift\',\'Arial Narrow\',Arial,sans-serif;font-size:7pt;color:' + SLATE_LIGHT + ';line-height:1.45;letter-spacing:0.3px;width:' + RIGHT_W + 'px;">' + QR_LABEL[currentLang] + '</td></tr>';
       html +=           '</table>';
@@ -502,7 +502,7 @@
 
       // Disclaimer
       html +=     '<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;width:' + TOTAL_W + 'px;margin-top:16px;">';
-      html +=       '<tr><td style="font-family:\'Segoe UI\',Arial,sans-serif;font-size:8pt;line-height:1.5;color:' + SLATE_LIGHT + ';text-align:justify;">' + disclaimer + '</td></tr>';
+      html +=       '<tr><td style="font-family:\'Segoe UI\',Arial,sans-serif;font-size:7.5pt;line-height:1.5;color:' + SLATE_LIGHT + ';text-align:justify;">' + disclaimer + '</td></tr>';
       html +=     '</table>';
 
       html +=   '</td></tr>';
