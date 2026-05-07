@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aditum · Generador de firmas</title>
+  <style>
+    :root {
+      --navy: #0A2E5C;
+      --navy-deep: #06203F;
+      --teal-deep: #1A6B7A;
+      --copper: #B8704A;
+      --slate: #5A6B7D;
+      --slate-light: #8895A4;
+      --mist: #E8F0F2;
+      --paper: #F8FAFC;
+      --line: #D5DCE3;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--paper);
+      color: var(--navy);
+      min-height: 100vh;
+    }
+
+    .app-header {
+      background: var(--navy);
+      color: white;
+      padding: 14px 32px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border-bottom: 3px solid var(--teal-deep);
+    }
+    .app-header img { height: 32px; display: block; }
+    .app-header h1 {
+      margin: 0;
+      font-family: 'Bahnschrift Condensed', 'Bahnschrift', 'Arial Narrow', sans-serif;
+      font-weight: 600;
+      font-size: 18px;
+      letter-spacing: 0.6px;
+    }
+    .app-header .meta {
+      margin-left: auto;
+      font-size: 11px;
+      opacity: 0.6;
+      font-family: 'Consolas', 'Courier New', monospace;
+      letter-spacing: 0.5px;
+    }
+
+    .warn-bar {
+      background: #FBE9CC;
+      border-bottom: 1px solid #E0BC7A;
+      color: #6B4A1A;
+      padding: 10px 32px;
+      font-size: 12px;
+      font-family: 'Consolas', monospace;
+      display: none;
+    }
+    .warn-bar.show { display: block; }
+
+    .app-body {
+      display: grid;
+      grid-template-columns: minmax(420px, 40%) 1fr;
+      min-height: calc(100vh - 65px);
+    }
+
+    .form-panel {
+      padding: 28px 32px;
+      border-right: 1px solid var(--mist);
+      background: white;
+    }
+
+    .preview-panel {
+      padding: 28px 32px;
+      background: var(--paper);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .section-title {
+      font-family: 'Bahnschrift Condensed', sans-serif;
+      font-size: 15px;
+      color: var(--navy);
+      margin: 0 0 16px 0;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding-bottom: 6px;
+      border-bottom: 2px solid var(--teal-deep);
+    }
+
+    .lang-toggle {
+      display: flex;
+      gap: 0;
+      margin-bottom: 22px;
+      border: 1px solid var(--navy);
+    }
+    .lang-toggle button {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      background: white;
+      cursor: pointer;
+      font-family: 'Bahnschrift Condensed', sans-serif;
+      font-size: 13px;
+      letter-spacing: 1.2px;
+      color: var(--navy);
+      transition: background 0.15s, color 0.15s;
+    }
+    .lang-toggle button.active {
+      background: var(--navy);
+      color: white;
+    }
+
+    .form-group { margin-bottom: 16px; }
+
+    .form-group label {
+      display: block;
+      font-family: 'Bahnschrift Condensed', sans-serif;
+      font-size: 11px;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: 5px;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 9px 11px;
+      border: 1px solid var(--line);
+      border-radius: 0;
+      font-family: 'Segoe UI', sans-serif;
+      font-size: 13px;
+      color: var(--navy);
+      background: white;
+      transition: border-color 0.15s;
+    }
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--teal-deep);
+    }
+    .form-group .hint {
+      font-size: 11px;
+      color: var(--slate-light);
+      margin-top: 4px;
+      font-family: 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
+      font-style: italic;
+    }
+
+    .custom-title-fields {
+      display: none;
+      padding: 14px;
+      background: var(--paper);
+      border-left: 3px solid var(--teal-deep);
+      margin: -8px 0 16px 0;
+    }
+    .custom-title-fields.active { display: block; }
+    .custom-title-fields .form-group:last-child { margin-bottom: 0; }
+
+    .preview-frame {
+      background: white;
+      border: 1px solid var(--line);
+      padding: 22px;
+      box-shadow: 0 1px 4px rgba(10, 46, 92, 0.05);
+      overflow-x: auto;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+    }
+    .btn {
+      flex: 1;
+      padding: 12px 18px;
+      border: none;
+      cursor: pointer;
+      font-family: 'Bahnschrift Condensed', sans-serif;
+      font-size: 12px;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      transition: all 0.15s;
+    }
+    .btn-primary { background: var(--navy); color: white; }
+    .btn-primary:hover { background: var(--teal-deep); }
+    .btn-secondary {
+      background: white;
+      color: var(--navy);
+      border: 1px solid var(--navy);
+    }
+    .btn-secondary:hover { background: var(--mist); }
+    .btn.copied { background: var(--teal-deep); color: white; }
+
+    .code-block {
+      background: #0F1419;
+      color: #B8E0E8;
+      padding: 14px;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 10.5px;
+      line-height: 1.5;
+      max-height: 220px;
+      overflow: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    .install-note {
+      font-family: 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
+      font-style: italic;
+      font-size: 12px;
+      color: var(--slate);
+      line-height: 1.55;
+      padding: 12px 14px;
+      background: white;
+      border-left: 2px solid var(--teal-deep);
+    }
+    .install-note strong { font-style: normal; color: var(--navy); font-family: 'Segoe UI', sans-serif; }
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <img src="./assets/imago.png" alt="Aditum">
+    <h1>Generador de firmas · Email Signature Generator</h1>
+    <span class="meta">v2.0</span>
+  </header>
+
+  <div id="warn-bar" class="warn-bar"></div>
+
+  <div class="app-body">
+    <div class="form-panel">
+      <h2 class="section-title" id="title-data">Datos · Information</h2>
+
+      <div class="lang-toggle">
+        <button id="btn-es" class="active" onclick="setLang('es')">ESPAÑOL</button>
+        <button id="btn-en" onclick="setLang('en')">ENGLISH</button>
+      </div>
+
+      <div class="form-group">
+        <label data-es="Nombre completo" data-en="Full name">Nombre completo</label>
+        <input type="text" id="name" placeholder="María González Rivera">
+      </div>
+
+      <div class="form-group">
+        <label data-es="Correo electrónico" data-en="Email">Correo electrónico</label>
+        <input type="email" id="email" placeholder="maria.gonzalez@aditumconsulting.com">
+      </div>
+
+      <div class="form-group">
+        <label data-es="Puesto" data-en="Title">Puesto</label>
+        <select id="title">
+          <option value="ba">Business Analyst / Analista de Negocios</option>
+          <option value="ba-sr">Senior Business Analyst / Analista de Negocios Sr.</option>
+          <option value="consultant">Consultant / Consultor</option>
+          <option value="consultant-sr">Senior Consultant / Consultor Sr.</option>
+          <option value="manager">Manager / Gerente</option>
+          <option value="manager-sr">Senior Manager / Gerente Sr.</option>
+          <option value="custom">Personalizado / Custom</option>
+        </select>
+      </div>
+
+      <div id="custom-title-fields" class="custom-title-fields">
+        <div class="form-group">
+          <label>Puesto en español</label>
+          <input type="text" id="title-custom-es" placeholder="Director de Acceso al Mercado">
+        </div>
+        <div class="form-group">
+          <label>Title in English</label>
+          <input type="text" id="title-custom-en" placeholder="Director of Market Access">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label data-es="Celular" data-en="Mobile phone">Celular</label>
+        <input type="text" id="mobile" placeholder="+52 55 1234 5678">
+      </div>
+
+      <div class="form-group">
+        <label data-es="LinkedIn (opcional)" data-en="LinkedIn (optional)">LinkedIn (opcional)</label>
+        <input type="text" id="linkedin" placeholder="linkedin.com/in/maria-gonzalez">
+        <div class="hint" data-es="No aparece visible en la firma. Se incluye en el código QR para añadir contacto." data-en="Not shown in signature. Included in the QR vCard for one-tap contact import.">No aparece visible en la firma. Se incluye en el código QR para añadir contacto.</div>
+      </div>
+    </div>
+
+    <div class="preview-panel">
+      <h2 class="section-title">Vista previa · Preview</h2>
+      <div class="preview-frame" id="preview-frame"></div>
+
+      <div class="actions">
+        <button class="btn btn-primary" id="btn-copy" onclick="copyHTML()">
+          <span data-es="Copiar HTML" data-en="Copy HTML">Copiar HTML</span>
+        </button>
+        <button class="btn btn-secondary" id="btn-download" onclick="downloadHTML()">
+          <span data-es="Descargar .html" data-en="Download .html">Descargar .html</span>
+        </button>
+      </div>
+
+      <div class="install-note" id="install-note">
+        <strong data-es="Cómo instalar:" data-en="How to install:">Cómo instalar:</strong>
+        <span data-es=" Outlook: Archivo → Opciones → Correo → Firmas → editar firma → pegar (modo HTML). Gmail: Configuración → Firma → pegar. Apple Mail: Preferencias → Firmas → arrastrar el .html descargado." data-en=" Outlook: File → Options → Mail → Signatures → edit signature → paste (HTML mode). Gmail: Settings → Signature → paste. Apple Mail: Preferences → Signatures → drag the downloaded .html file."> Outlook: Archivo → Opciones → Correo → Firmas → editar firma → pegar (modo HTML). Gmail: Configuración → Firma → pegar. Apple Mail: Preferencias → Firmas → arrastrar el .html descargado.</span>
+      </div>
+
+      <h2 class="section-title" style="margin-top: 8px;">HTML · Source</h2>
+      <div class="code-block" id="code-block"></div>
+    </div>
+  </div>
+
+  <script src="./lib/qrcode.js"></script>
+  <script>
+    // ====================================================================
+    // CONFIG · al desplegar en GitHub Pages la URL del imago se
+    // calcula automáticamente desde el origen actual. Si prefieres
+    // hard-codear una URL fija de producción, edítala aquí.
+    // ====================================================================
+    const CONFIG = {
+      LOGO_URL: (function () {
+        const base = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '');
+        return base + '/assets/logo.png';
+      })(),
+      IMAGO_URL: (function () {
+        const base = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '');
+        return base + '/assets/imago.png';
+      })(),
+      WEBSITE: 'www.aditumconsulting.com',
+      WEBSITE_URL: 'https://www.aditumconsulting.com'
+    };
+
+    // Microetiqueta del QR, siempre bilingüe (no cambia con el toggle).
+    // Se apila en dos líneas para evitar quiebres feos del wrap automático.
+    const QR_LABEL = 'Escanea para añadir contacto<br>Scan to save contact';
+
+    let currentLang = 'es';
+
+    const TITLES = {
+      'ba':            { es: 'Analista de Negocios',     en: 'Business Analyst' },
+      'ba-sr':         { es: 'Analista de Negocios Sr.', en: 'Senior Business Analyst' },
+      'consultant':    { es: 'Consultor',                en: 'Consultant' },
+      'consultant-sr': { es: 'Consultor Sr.',            en: 'Senior Consultant' },
+      'manager':       { es: 'Gerente',                  en: 'Manager' },
+      'manager-sr':    { es: 'Gerente Sr.',              en: 'Senior Manager' }
+    };
+
+    const DISCLAIMER = {
+      es: 'Este mensaje y cualquier archivo adjunto son confidenciales y de uso exclusivo del destinatario. Si usted no es el destinatario, queda notificado de que cualquier divulgación, copia o distribución está prohibida. Si recibió este mensaje por error, por favor notifique al remitente y elimínelo. Aditum Consulting Group S.A. de C.V. y Aditum Consulting LLC no asumen responsabilidad por modificaciones, intercepciones o usos no autorizados.',
+      en: 'This message and any attachments are confidential and intended solely for the addressee. If you are not the intended recipient, you are hereby notified that any disclosure, copying, or distribution is prohibited. If you received this message in error, please notify the sender and delete it. Aditum Consulting Group S.A. de C.V. and Aditum Consulting LLC accept no liability for modifications, interceptions, or unauthorized use.'
+    };
+
+    function setLang(lang) {
+      currentLang = lang;
+      document.getElementById('btn-es').classList.toggle('active', lang === 'es');
+      document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+      document.querySelectorAll('[data-es][data-en]').forEach(el => {
+        const text = el.getAttribute('data-' + lang);
+        if (text !== null) el.textContent = text;
+      });
+      document.documentElement.lang = lang;
+      render();
+    }
+
+    function getTitle() {
+      const sel = document.getElementById('title').value;
+      if (sel === 'custom') {
+        return document.getElementById('title-custom-' + currentLang).value || '';
+      }
+      return TITLES[sel][currentLang];
+    }
+
+    function escapeVCard(s) {
+      if (!s) return '';
+      return s.replace(/\\/g, '\\\\').replace(/,/g, '\\,').replace(/;/g, '\\;').replace(/\n/g, '\\n');
+    }
+
+    function buildVCard(data) {
+      const lines = [
+        'BEGIN:VCARD',
+        'VERSION:3.0',
+        'FN:' + escapeVCard(data.name),
+        'N:' + escapeVCard(data.name) + ';;;;',
+        'ORG:Aditum Consulting',
+        'TITLE:' + escapeVCard(data.title)
+      ];
+      if (data.mobile) lines.push('TEL;TYPE=CELL,VOICE:' + data.mobile);
+      if (data.email) lines.push('EMAIL;TYPE=WORK:' + data.email);
+      lines.push('URL:' + CONFIG.WEBSITE_URL);
+      if (data.linkedin) {
+        let ln = data.linkedin.trim();
+        if (!ln.startsWith('http')) ln = 'https://' + ln.replace(/^\/+/, '');
+        lines.push('URL;TYPE=LinkedIn:' + ln);
+      }
+      lines.push('END:VCARD');
+      return lines.join('\r\n');
+    }
+
+    function generateQR(data) {
+      const vcard = buildVCard(data);
+      const qr = qrcode(0, 'M');
+      qr.addData(vcard);
+      qr.make();
+      return qr.createDataURL(4, 0);
+    }
+
+    function escapeHTML(s) {
+      if (!s) return '';
+      return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function buildSignatureHTML(data, qrDataURL) {
+      const NAVY = '#0A2E5C';
+      const TEAL = '#1A6B7A';
+      const SLATE = '#5A6B7D';
+      const SLATE_LIGHT = '#8895A4';
+      const TOTAL_W = 460;
+      const LEFT_W = 300;
+      const RIGHT_W = 140;
+      const GAP = 20;
+
+      const labels = { mobile: 'M.', email: 'E.', web: 'W.' };
+      const disclaimer = DISCLAIMER[currentLang];
+      const name = escapeHTML(data.name) || '&nbsp;';
+      const title = escapeHTML(data.title) || '&nbsp;';
+      const mobile = escapeHTML(data.mobile);
+      const email = escapeHTML(data.email);
+
+      let contactRows = '';
+      if (data.mobile) {
+        contactRows += '<tr><td style="padding:0 8px 0 0;color:' + TEAL + ';font-family:\'Consolas\',\'Courier New\',monospace;font-size:9.5pt;width:24px;vertical-align:top;">' + labels.mobile + '</td><td style="padding:0;">' + mobile + '</td></tr>';
+      }
+      if (data.email) {
+        contactRows += '<tr><td style="padding:0 8px 0 0;color:' + TEAL + ';font-family:\'Consolas\',\'Courier New\',monospace;font-size:9.5pt;width:24px;vertical-align:top;">' + labels.email + '</td><td style="padding:0;"><a href="mailto:' + email + '" style="color:' + SLATE + ';text-decoration:none;">' + email + '</a></td></tr>';
+      }
+      contactRows += '<tr><td style="padding:0 8px 0 0;color:' + TEAL + ';font-family:\'Consolas\',\'Courier New\',monospace;font-size:9.5pt;width:24px;vertical-align:top;">' + labels.web + '</td><td style="padding:0;"><a href="' + CONFIG.WEBSITE_URL + '" style="color:' + SLATE + ';text-decoration:none;">' + CONFIG.WEBSITE + '</a></td></tr>';
+
+      let html = '<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;font-family:\'Segoe UI\',Arial,sans-serif;color:' + SLATE + ';">';
+      html +=   '<tr><td style="padding:0;width:' + TOTAL_W + 'px;">';
+
+      // Banner: full logo, left-aligned
+      html +=     '<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;width:' + TOTAL_W + 'px;">';
+      html +=       '<tr><td style="padding:0;"><img src="' + CONFIG.LOGO_URL + '" alt="Aditum Consulting" width="298" height="55" style="display:block;border:0;width:298px;height:55px;"></td></tr>';
+      html +=     '</table>';
+
+      // Long horizontal rule, full signature width
+      html +=     '<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;width:' + TOTAL_W + 'px;margin-top:14px;">';
+      html +=       '<tr><td style="height:1px;background-color:' + TEAL + ';font-size:1px;line-height:1px;">&nbsp;</td></tr>';
+      html +=     '</table>';
+
+      // Body: left = name/title/mini-rule/contact, right = QR + microlabel
+      html +=     '<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;width:' + TOTAL_W + 'px;margin-top:14px;">';
+      html +=       '<tr>';
+      html +=         '<td valign="top" style="width:' + LEFT_W + 'px;padding:0;">';
+      html +=           '<div style="font-family:\'Bahnschrift SemiBold\',\'Bahnschrift\',\'Segoe UI\',Arial,sans-serif;font-weight:600;font-size:16pt;color:' + NAVY + ';line-height:1.15;letter-spacing:0.2px;">' + name + '</div>';
+      html +=           '<div style="font-family:\'Bahnschrift Condensed\',\'Bahnschrift\',\'Arial Narrow\',Arial,sans-serif;font-size:11.5pt;color:' + SLATE + ';line-height:1.2;margin-top:3px;letter-spacing:0.3px;">' + title + '</div>';
+      // Mini-rule: short teal accent
+      html +=           '<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;margin:10px 0 9px 0;width:60px;"><tr><td style="height:1px;background-color:' + TEAL + ';font-size:1px;line-height:1px;">&nbsp;</td></tr></table>';
+      html +=           '<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;font-family:\'Segoe UI\',Arial,sans-serif;font-size:10.5pt;color:' + SLATE + ';line-height:1.65;">';
+      html +=             contactRows;
+      html +=           '</table>';
+      html +=         '</td>';
+      html +=         '<td style="width:' + GAP + 'px;padding:0;font-size:1px;line-height:1px;">&nbsp;</td>';
+      // Right: QR + bilingual microlabel
+      html +=         '<td valign="top" style="width:' + RIGHT_W + 'px;padding:0;">';
+      html +=           '<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">';
+      html +=             '<tr><td style="padding:0;"><img src="' + qrDataURL + '" alt="vCard QR" width="90" height="90" style="display:block;border:0;width:90px;height:90px;"></td></tr>';
+      html +=             '<tr><td style="height:6px;font-size:1px;line-height:1px;">&nbsp;</td></tr>';
+      html +=             '<tr><td style="font-family:\'Bahnschrift Condensed\',\'Bahnschrift\',\'Arial Narrow\',Arial,sans-serif;font-size:7pt;color:' + SLATE_LIGHT + ';line-height:1.45;letter-spacing:0.3px;width:' + RIGHT_W + 'px;">' + QR_LABEL + '</td></tr>';
+      html +=           '</table>';
+      html +=         '</td>';
+      html +=       '</tr>';
+      html +=     '</table>';
+
+      // Disclaimer, full width
+      html +=     '<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;width:' + TOTAL_W + 'px;margin-top:16px;">';
+      html +=       '<tr><td style="font-family:\'Segoe UI\',Arial,sans-serif;font-size:8pt;line-height:1.5;color:' + SLATE_LIGHT + ';text-align:justify;">' + disclaimer + '</td></tr>';
+      html +=     '</table>';
+
+      html +=   '</td></tr>';
+      html += '</table>';
+      return html;
+    }
+
+    function gatherData() {
+      return {
+        name: document.getElementById('name').value.trim(),
+        title: getTitle(),
+        email: document.getElementById('email').value.trim(),
+        mobile: document.getElementById('mobile').value.trim(),
+        linkedin: document.getElementById('linkedin').value.trim()
+      };
+    }
+
+    function render() {
+      const data = gatherData();
+      let qrDataURL = '';
+      try { qrDataURL = generateQR(data); } catch (e) { console.error(e); }
+      const html = buildSignatureHTML(data, qrDataURL);
+      document.getElementById('preview-frame').innerHTML = html;
+      document.getElementById('code-block').textContent = html;
+    }
+
+    function copyHTML() {
+      const html = document.getElementById('code-block').textContent;
+      // Use both plain-text copy and an HTML clipboard write so paste-as-formatted works
+      const blob = new Blob([html], { type: 'text/html' });
+      const item = new ClipboardItem({ 'text/html': blob, 'text/plain': new Blob([html], { type: 'text/plain' }) });
+      const flash = () => {
+        const btn = document.getElementById('btn-copy');
+        const span = btn.querySelector('span');
+        const orig = span.textContent;
+        btn.classList.add('copied');
+        span.textContent = currentLang === 'es' ? '✓ Copiado' : '✓ Copied';
+        setTimeout(() => { btn.classList.remove('copied'); span.textContent = orig; }, 1500);
+      };
+      if (navigator.clipboard && navigator.clipboard.write) {
+        navigator.clipboard.write([item]).then(flash, () => {
+          navigator.clipboard.writeText(html).then(flash);
+        });
+      } else {
+        navigator.clipboard.writeText(html).then(flash);
+      }
+    }
+
+    function downloadHTML() {
+      const html = document.getElementById('code-block').textContent;
+      const data = gatherData();
+      const safe = (data.name || 'aditum_signature').replace(/[^a-zA-Z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+      const filename = safe + '_' + currentLang + '.html';
+      const wrapper = '<!DOCTYPE html><html lang="' + currentLang + '"><head><meta charset="UTF-8"><title>' + escapeHTML(data.name || 'Aditum Signature') + '</title></head><body>' + html + '</body></html>';
+      const blob = new Blob([wrapper], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = filename;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    // Local-file warning
+    if (window.location.protocol === 'file:') {
+      const bar = document.getElementById('warn-bar');
+      bar.classList.add('show');
+      bar.textContent = 'Modo local detectado (file://). El imago no cargará en correos hasta desplegar la app en GitHub Pages u otro host. La firma sí se previsualiza correctamente aquí.';
+    }
+
+    // Wire up
+    ['name', 'email', 'mobile', 'linkedin', 'title-custom-es', 'title-custom-en'].forEach(id => {
+      document.getElementById(id).addEventListener('input', render);
+    });
+    document.getElementById('title').addEventListener('change', e => {
+      document.getElementById('custom-title-fields').classList.toggle('active', e.target.value === 'custom');
+      render();
+    });
+
+    // Sample data on first load
+    document.getElementById('name').value = 'María González Rivera';
+    document.getElementById('email').value = 'maria.gonzalez@aditumconsulting.com';
+    document.getElementById('mobile').value = '+52 55 1234 5678';
+    document.getElementById('linkedin').value = 'linkedin.com/in/maria-gonzalez';
+
+    render();
+  </script>
+</body>
+</html>
