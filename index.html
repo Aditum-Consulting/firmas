@@ -243,8 +243,8 @@
       </div>
 
       <div class="form-group">
-        <label data-es="Nombre completo" data-en="Full name">Nombre completo</label>
-        <input type="text" id="name" placeholder="María González Rivera">
+        <label data-es="Nombre y apellido" data-en="First and last name">Nombre y apellido</label>
+        <input type="text" id="name" placeholder="María González">
       </div>
 
       <div class="form-group">
@@ -331,9 +331,11 @@
       WEBSITE_URL: 'https://www.aditumconsulting.com'
     };
 
-    // Microetiqueta del QR, siempre bilingüe (no cambia con el toggle).
-    // Se apila en dos líneas para evitar quiebres feos del wrap automático.
-    const QR_LABEL = 'Escanea para añadir contacto<br>Scan to save contact';
+    // Microetiqueta del QR, adaptada al idioma seleccionado
+    const QR_LABEL = {
+      es: 'Escanea para añadir contacto',
+      en: 'Scan to save contact'
+    };
 
     let currentLang = 'es';
 
@@ -467,7 +469,7 @@
       html +=           '<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">';
       html +=             '<tr><td style="padding:0;"><img src="' + qrDataURL + '" alt="vCard QR" width="90" height="90" style="display:block;border:0;width:90px;height:90px;"></td></tr>';
       html +=             '<tr><td style="height:6px;font-size:1px;line-height:1px;">&nbsp;</td></tr>';
-      html +=             '<tr><td style="font-family:\'Bahnschrift Condensed\',\'Bahnschrift\',\'Arial Narrow\',Arial,sans-serif;font-size:7pt;color:' + SLATE_LIGHT + ';line-height:1.45;letter-spacing:0.3px;width:' + RIGHT_W + 'px;">' + QR_LABEL + '</td></tr>';
+      html +=             '<tr><td style="font-family:\'Bahnschrift Condensed\',\'Bahnschrift\',\'Arial Narrow\',Arial,sans-serif;font-size:7pt;color:' + SLATE_LIGHT + ';line-height:1.45;letter-spacing:0.3px;width:' + RIGHT_W + 'px;">' + QR_LABEL[currentLang] + '</td></tr>';
       html +=           '</table>';
       html +=         '</td>';
       html +=       '</tr>';
@@ -555,7 +557,7 @@
     });
 
     // Sample data on first load
-    document.getElementById('name').value = 'María González Rivera';
+    document.getElementById('name').value = 'María González';
     document.getElementById('email').value = 'maria.gonzalez@aditumconsulting.com';
     document.getElementById('mobile').value = '+52 55 1234 5678';
     document.getElementById('linkedin').value = 'linkedin.com/in/maria-gonzalez';

@@ -18,7 +18,7 @@ Una regla horizontal teal-deep de ancho completo separa el banner del cuerpo. Un
 - **Puestos predefinidos** para Business Analyst, Consultant y Manager (regular y senior), más opción personalizada con campos ES/EN independientes.
 - **QR vCard 3.0** que codifica nombre, organización, puesto, celular, correo, sitio web y LinkedIn opcional.
 - **LinkedIn no visible:** se incluye solo en el QR para evitar exposición en cadenas de correo reenviadas.
-- **Microetiqueta bilingüe** debajo del QR, no cambia con el toggle de idioma.
+- **Microetiqueta del QR** debajo del código, adaptada al idioma seleccionado (ES o EN).
 - **Disclaimer monolingüe** según idioma activo, ambas entidades legales nombradas en cada versión.
 
 ## Despliegue en GitHub Pages
