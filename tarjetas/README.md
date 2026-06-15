@@ -1,4 +1,4 @@
-# Aditum Card & Badge Generator · v4.0
+# Aditum Card & Badge Generator · v5.0
 
 Generador unificado de tarjetas de presentación y gafetes de credencial para el equipo Aditum. App estática HTML/CSS/JavaScript que produce PDFs listos para imprenta. Sin backend, sin build step, sin dependencias en runtime más allá de las librerías incluidas.
 
@@ -41,7 +41,7 @@ PDF de 2 páginas:
 
 ### Tarjeta de pantalla (vertical, para mostrar en el celular)
 
-PDF de 1 página, formato vertical (≈9:16), pensado para abrirse y mostrarse en la pantalla de un teléfono cuando conoces a alguien. No es para imprimir: no lleva sangrado ni marcas de corte.
+**PNG de 1080×1920** (full-HD vertical, ≈9:16), pensado para abrirse y mostrarse en la pantalla de un teléfono cuando conoces a alguien. El PNG es el formato natural para esto: se abre a pantalla completa al instante, se comparte por chat y hasta sirve de fondo de pantalla. No es para imprimir: no lleva sangrado ni marcas de corte. (Se ofrece también una descarga **PDF opcional** con el botón secundario, por si se prefiere ese formato.)
 
 - Fondo navy completo, imago Aditum arriba, nombre y puesto centrados, línea teal de acento.
 - **QR vCard grande (36mm)** como elemento dominante: la otra persona lo escanea con su cámara y guarda el contacto directo.
