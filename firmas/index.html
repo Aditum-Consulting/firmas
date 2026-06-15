@@ -222,6 +222,13 @@
       border-left: 2px solid var(--teal-deep);
     }
     .install-note strong { font-style: normal; color: var(--navy); font-family: 'Segoe UI', sans-serif; }
+
+    /* Shared profile save/load bar (common across Aditum tools, this device) */
+    .profile-bar { display: flex; gap: 8px; align-items: center; margin: -6px 0 6px; flex-wrap: wrap; }
+    .profile-btn { padding: 7px 11px; border: 1px solid var(--navy); background: white; color: var(--navy); cursor: pointer; font-family: 'Bahnschrift Condensed', sans-serif; font-size: 12px; letter-spacing: 0.8px; text-transform: uppercase; transition: all 0.15s; }
+    .profile-btn:hover { background: var(--navy); color: white; }
+    .profile-status { font-size: 11px; color: var(--teal-deep); font-family: 'Segoe UI', sans-serif; }
+    .profile-note { font-size: 11px; color: var(--slate-light); font-family: 'Palatino Linotype', 'Book Antiqua', Georgia, serif; font-style: italic; margin: 0 0 18px; }
   </style>
 </head>
 <body>
@@ -241,6 +248,13 @@
         <button id="btn-es" class="active" onclick="setLang('es')">ESPAÑOL</button>
         <button id="btn-en" onclick="setLang('en')">ENGLISH</button>
       </div>
+
+      <div class="profile-bar">
+        <button type="button" class="profile-btn" id="btn-load" onclick="loadProfile()" data-es="Cargar mis datos" data-en="Load my data">Cargar mis datos</button>
+        <button type="button" class="profile-btn" id="btn-save" onclick="saveProfile()" data-es="Guardar mis datos" data-en="Save my data">Guardar mis datos</button>
+        <span class="profile-status" id="profile-status"></span>
+      </div>
+      <div class="profile-note" data-es="Se comparten con las demás herramientas Aditum en este equipo/navegador." data-en="Shared with the other Aditum tools on this device/browser.">Se comparten con las demás herramientas Aditum en este equipo/navegador.</div>
 
       <div class="form-group">
         <label data-es="Nombre y apellido" data-en="First and last name">Nombre y apellido</label>
@@ -567,6 +581,57 @@
       URL.revokeObjectURL(url);
     }
 
+    // ============================================================
+    // Shared profile — ONE set of data for ALL Aditum tools.
+    // localStorage is per-origin, so a profile saved here is also
+    // available to the cards/badges generator (and vice versa) on the
+    // same site. No password: business-card data is non-sensitive,
+    // the device itself is the boundary.
+    // ============================================================
+    const PROFILE_KEY = 'aditum_profile_v1';
+    const PROFILE_FIELDS = ['name','email','title','mobile1','mobile2','office','linkedin','title-custom-es','title-custom-en'];
+
+    function flashStatus(msg) {
+      const el = document.getElementById('profile-status');
+      if (!el) return;
+      el.textContent = msg;
+      clearTimeout(flashStatus._t);
+      flashStatus._t = setTimeout(() => { el.textContent = ''; }, 2500);
+    }
+    function getSavedProfile() {
+      try {
+        let raw = localStorage.getItem(PROFILE_KEY);
+        if (!raw) raw = localStorage.getItem('aditum_card_profile_v1'); // migrate old key
+        return raw ? JSON.parse(raw) : null;
+      } catch (e) { return null; }
+    }
+    function saveProfile() {
+      const profile = { lang: currentLang };
+      PROFILE_FIELDS.forEach(id => { const el = document.getElementById(id); if (el) profile[id] = el.value; });
+      try {
+        localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+        flashStatus(currentLang === 'es' ? '✓ Datos guardados' : '✓ Data saved');
+      } catch (e) {
+        flashStatus(currentLang === 'es' ? 'No se pudo guardar' : 'Could not save');
+      }
+    }
+    function applyProfile(profile) {
+      PROFILE_FIELDS.forEach(id => {
+        const el = document.getElementById(id);
+        if (el && typeof profile[id] === 'string') el.value = profile[id];
+      });
+      if (profile.lang === 'es' || profile.lang === 'en') setLang(profile.lang);
+      document.getElementById('custom-title-fields').classList.toggle(
+        'active', document.getElementById('title').value === 'custom');
+      render();
+    }
+    function loadProfile() {
+      const profile = getSavedProfile();
+      if (!profile) { flashStatus(currentLang === 'es' ? 'No hay datos guardados' : 'No saved data'); return; }
+      applyProfile(profile);
+      flashStatus(currentLang === 'es' ? '✓ Datos cargados' : '✓ Data loaded');
+    }
+
     // Local-file warning
     if (window.location.protocol === 'file:') {
       const bar = document.getElementById('warn-bar');
@@ -583,11 +648,16 @@
       render();
     });
 
-    // Sample data on first load
-    document.getElementById('name').value = 'María González';
-    document.getElementById('email').value = 'maria.gonzalez@aditumconsulting.com';
-    document.getElementById('mobile1').value = '+52 55 1234 5678';
-    document.getElementById('linkedin').value = 'linkedin.com/in/maria-gonzalez';
+    // Load the shared profile if present, otherwise sample data
+    const savedProfile = getSavedProfile();
+    if (savedProfile) {
+      applyProfile(savedProfile);
+    } else {
+      document.getElementById('name').value = 'María González';
+      document.getElementById('email').value = 'maria.gonzalez@aditumconsulting.com';
+      document.getElementById('mobile1').value = '+52 55 1234 5678';
+      document.getElementById('linkedin').value = 'linkedin.com/in/maria-gonzalez';
+    }
 
     render();
   </script>
