@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aditum · Herramientas internas</title>
+  <style>
+    :root {
+      --navy: #0A2E5C;
+      --navy-deep: #06203F;
+      --teal-bright: #2A8B9F;
+      --teal-deep: #1A6B7A;
+      --copper: #B8704A;
+      --slate: #5A6B7D;
+      --slate-light: #8895A4;
+      --mist: #E8F0F2;
+      --paper: #F8FAFC;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      height: 100%;
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+      background: var(--paper);
+      color: var(--navy);
+      -webkit-font-smoothing: antialiased;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .brand {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 56px;
+      text-align: center;
+    }
+    .wordmark {
+      font-family: 'Bahnschrift Condensed', 'Bahnschrift', 'Segoe UI', sans-serif;
+      font-weight: 600;
+      font-size: 38px;
+      letter-spacing: 4px;
+      color: var(--navy);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .tagline {
+      font-size: 11px;
+      letter-spacing: 4.5px;
+      text-transform: uppercase;
+      color: var(--slate);
+      font-weight: 500;
+    }
+    .accent {
+      width: 36px;
+      height: 2px;
+      background: var(--teal-bright);
+      margin: 18px 0 0 0;
+    }
+    .intro {
+      text-align: center;
+      max-width: 520px;
+      margin-bottom: 56px;
+    }
+    .intro h1 {
+      font-family: 'Bahnschrift Condensed', 'Bahnschrift', 'Segoe UI', sans-serif;
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 12px;
+      line-height: 1.2;
+    }
+    .intro p {
+      font-size: 14.5px;
+      color: var(--slate);
+      line-height: 1.55;
+    }
+    .tools {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      width: 100%;
+      max-width: 760px;
+    }
+    .tool-card {
+      background: white;
+      border: 1px solid var(--mist);
+      padding: 32px 28px;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transition: border-color 0.2s ease, transform 0.2s ease;
+      position: relative;
+    }
+    .tool-card:hover {
+      border-color: var(--teal-bright);
+      transform: translateY(-2px);
+    }
+    .tool-card .label {
+      font-family: 'Consolas', 'SF Mono', 'Menlo', monospace;
+      font-size: 10.5px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--teal-deep);
+      font-weight: 600;
+    }
+    .tool-card h2 {
+      font-family: 'Bahnschrift Condensed', 'Bahnschrift', 'Segoe UI', sans-serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--navy);
+      line-height: 1.2;
+    }
+    .tool-card p {
+      font-size: 13.5px;
+      color: var(--slate);
+      line-height: 1.5;
+    }
+    .tool-card .arrow {
+      margin-top: 10px;
+      font-family: 'Consolas', 'SF Mono', 'Menlo', monospace;
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--copper);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tool-card .arrow::after {
+      content: '→';
+      font-size: 14px;
+      transition: transform 0.2s ease;
+    }
+    .tool-card:hover .arrow::after {
+      transform: translateX(4px);
+    }
+    footer {
+      padding: 24px;
+      text-align: center;
+      font-family: 'Consolas', 'SF Mono', 'Menlo', monospace;
+      font-size: 10.5px;
+      letter-spacing: 2px;
+      color: var(--slate-light);
+      text-transform: uppercase;
+    }
+    @media (max-width: 520px) {
+      main { padding: 32px 20px; }
+      .wordmark { font-size: 30px; letter-spacing: 3px; }
+      .intro h1 { font-size: 22px; }
+      .tools { grid-template-columns: 1fr; }
+      .tool-card { padding: 26px 24px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="brand">
+      <div class="wordmark">ADITUM</div>
+      <div class="tagline">Consulting</div>
+      <div class="accent"></div>
+    </div>
+
+    <div class="intro">
+      <h1>Herramientas internas</h1>
+      <p>Generadores oficiales para producir piezas de marca y comunicación del equipo Aditum, listas para imprimir, descargar o usar inmediatamente.</p>
+    </div>
+
+    <div class="tools">
+      <a href="./firmas/" class="tool-card">
+        <div class="label">01 · Identidad digital</div>
+        <h2>Firmas de correo</h2>
+        <p>Genera firmas HTML consistentes para Outlook, Apple Mail y Gmail. Listas para copiar y pegar.</p>
+        <div class="arrow">Abrir generador</div>
+      </a>
+
+      <a href="./tarjetas/" class="tool-card">
+        <div class="label">02 · Identidad física</div>
+        <h2>Tarjetas y gafetes</h2>
+        <p>Produce PDFs listos para imprenta: tarjeta de presentación, gafete de credencial y tarjeta de pantalla para el celular.</p>
+        <div class="arrow">Abrir generador</div>
+      </a>
+    </div>
+  </main>
+
+  <footer>
+    Aditum Consulting · Equipo interno
+  </footer>
+</body>
+</html>
