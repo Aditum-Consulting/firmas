@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aditum · Tarjetas y gafetes</title>
+  <style>
+    @font-face { font-family: 'Barlow Condensed'; src: url('./assets/fonts/BarlowCondensed-Regular.ttf') format('truetype'); font-weight: 400; }
+    @font-face { font-family: 'Barlow Condensed'; src: url('./assets/fonts/BarlowCondensed-Medium.ttf') format('truetype'); font-weight: 500; }
+    @font-face { font-family: 'Barlow Condensed'; src: url('./assets/fonts/BarlowCondensed-SemiBold.ttf') format('truetype'); font-weight: 600; }
+    @font-face { font-family: 'Open Sans Brand'; src: url('./assets/fonts/OpenSans-Regular.ttf') format('truetype'); font-weight: 400; }
+    @font-face { font-family: 'Open Sans Brand'; src: url('./assets/fonts/OpenSans-SemiBold.ttf') format('truetype'); font-weight: 600; }
+
+    :root {
+      --navy: #0A2E5C; --navy-deep: #06203F;
+      --teal-deep: #1A6B7A; --teal-bright: #2A8B9F;
+      --copper: #B8704A;
+      --slate: #5A6B7D; --slate-light: #8895A4;
+      --mist: #E8F0F2; --paper: #F8FAFC; --line: #D5DCE3;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 0; font-family: 'Open Sans Brand', 'Segoe UI', sans-serif; background: var(--paper); color: var(--navy); min-height: 100vh; }
+    .app-header { background: var(--navy); color: white; padding: 14px 32px; display: flex; align-items: center; gap: 14px; border-bottom: 3px solid var(--teal-deep); }
+    .app-header img { height: 32px; display: block; }
+    .app-header h1 { margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 19px; letter-spacing: 0.6px; }
+    .app-header .meta { margin-left: auto; font-size: 11px; opacity: 0.6; font-family: 'Consolas', monospace; }
+    .warn-bar { background: #FBE9CC; border-bottom: 1px solid #E0BC7A; color: #6B4A1A; padding: 10px 32px; font-size: 12px; font-family: 'Consolas', monospace; display: none; }
+    .warn-bar.show { display: block; }
+    .app-body { display: grid; grid-template-columns: minmax(420px, 38%) 1fr; min-height: calc(100vh - 65px); }
+    .form-panel { padding: 28px 32px; border-right: 1px solid var(--mist); background: white; overflow-y: auto; max-height: calc(100vh - 65px); }
+    .preview-panel { padding: 28px 32px; background: var(--paper); display: flex; flex-direction: column; gap: 18px; }
+    .section-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 15px; color: var(--navy); margin: 0 0 16px 0; letter-spacing: 0.5px; text-transform: uppercase; padding-bottom: 6px; border-bottom: 2px solid var(--teal-deep); }
+    .lang-toggle, .product-toggle { display: flex; gap: 0; margin-bottom: 22px; border: 1px solid var(--navy); }
+    .lang-toggle button, .product-toggle button { flex: 1; padding: 10px; border: none; background: white; cursor: pointer; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 13px; letter-spacing: 1.2px; color: var(--navy); }
+    .lang-toggle button.active, .product-toggle button.active { background: var(--navy); color: white; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-family: 'Barlow Condensed', sans-serif; font-weight: 500; font-size: 11px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--slate); margin-bottom: 5px; }
+    .form-group input, .form-group select { width: 100%; padding: 9px 11px; border: 1px solid var(--line); border-radius: 0; font-family: 'Open Sans Brand', sans-serif; font-size: 13px; color: var(--navy); background: white; }
+    .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--teal-deep); }
+    .form-group .hint { font-size: 11px; color: var(--slate-light); margin-top: 4px; font-family: 'Palatino Linotype', Georgia, serif; font-style: italic; }
+    .custom-title-fields { display: none; padding: 14px; background: var(--paper); border-left: 3px solid var(--teal-deep); margin: -8px 0 16px 0; }
+    .custom-title-fields.active { display: block; }
+    .custom-title-fields .form-group:last-child { margin-bottom: 0; }
+    .photo-uploader { border: 1px dashed var(--line); padding: 14px; text-align: center; cursor: pointer; background: var(--paper); transition: border-color 0.15s; display: block; }
+    .photo-uploader:hover { border-color: var(--teal-deep); background: white; }
+    .photo-uploader.has-photo { padding: 8px; text-align: left; display: flex; gap: 12px; align-items: center; }
+    .photo-uploader input[type="file"] { display: none; }
+    .photo-uploader .ph-thumb { width: 64px; height: 78px; background: var(--mist); object-fit: cover; display: block; }
+    .photo-uploader .ph-text { font-size: 12px; color: var(--slate); font-family: 'Open Sans Brand', sans-serif; }
+    .photo-uploader .ph-text strong { color: var(--navy); display: block; margin-bottom: 2px; }
+    .photo-uploader .ph-remove { margin-left: auto; background: none; border: 1px solid var(--line); padding: 6px 10px; cursor: pointer; font-family: 'Barlow Condensed', sans-serif; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--slate); }
+    .photo-uploader .ph-remove:hover { background: var(--mist); color: var(--navy); }
+
+    .card-pair, .badge-pair { display: flex; gap: 32px; flex-wrap: wrap; align-items: flex-start; }
+    .preview-wrap { position: relative; padding-top: 22px; }
+    .preview-wrap .label { position: absolute; top: 0; left: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 10px; letter-spacing: 1.5px; color: var(--slate); text-transform: uppercase; }
+
+    /* CARD: 90×55mm → 360×220 px */
+    .card { width: 360px; height: 220px; background: white; box-shadow: 0 2px 12px rgba(10,46,92,0.12); position: relative; overflow: hidden; font-family: 'Open Sans Brand', sans-serif; }
+    .card-front .navy-strip { position: absolute; left: 0; top: 0; width: 140px; height: 100%; background: var(--navy); }
+    .card-front .navy-strip img { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 108px; height: auto; }
+    .card-front .teal-anchor { position: absolute; left: 140px; top: 50%; transform: translateY(-50%); width: 10px; height: 72px; background: var(--teal-bright); }
+    .card-front .info { position: absolute; left: 168px; top: 50%; transform: translateY(-50%); right: 22px; }
+    .card-front .name { font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 22px; color: var(--navy); letter-spacing: 0.3px; line-height: 1.1; }
+    .card-front .title { font-family: 'Barlow Condensed', sans-serif; font-weight: 500; font-size: 13px; color: var(--slate); letter-spacing: 0.4px; margin-top: 5px; margin-bottom: 13px; }
+    .card-front .contact { line-height: 1.85; font-size: 10.5px; color: var(--slate); }
+    .card-front .contact-row { display: flex; align-items: center; gap: 8px; }
+    .card-front .contact-row img { width: 11px; height: 11px; }
+    .card-back { background: var(--navy); position: relative; }
+    .card-back .imago { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -68%); width: 70px; height: 70px; }
+    .card-back .web { position: absolute; top: 50%; left: 50%; transform: translate(-50%, 28px); font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 12px; color: var(--copper); letter-spacing: 2.2px; text-transform: uppercase; white-space: nowrap; }
+    .card-back .qr-wrap { position: absolute; bottom: 14px; right: 14px; background: white; padding: 4px; }
+    .card-back .qr-wrap img { width: 56px; height: 56px; display: block; }
+    .card-back .qr-label { position: absolute; bottom: 18px; left: 18px; font-family: 'Barlow Condensed', sans-serif; font-weight: 400; font-size: 9px; letter-spacing: 0.5px; color: rgba(255,255,255,0.65); max-width: 140px; line-height: 1.4; }
+
+    /* BADGE: 54×85.6mm portrait CR80 → 216×342 px (1mm=4px) */
+    .badge { width: 216px; height: 342px; background: white; box-shadow: 0 2px 12px rgba(10,46,92,0.12); position: relative; overflow: hidden; font-family: 'Open Sans Brand', sans-serif; }
+    .badge::before {
+      content: ''; position: absolute; top: 18px; left: 50%; transform: translateX(-50%);
+      width: 40px; height: 12px; background: rgba(255,255,255,0.95); border: 1px dashed rgba(150,150,150,0.7); border-radius: 6px; z-index: 10;
+    }
+    .badge-back::before { background: rgba(10,46,92,0.85); border-color: rgba(255,255,255,0.45); }
+    .badge-front .header { background: var(--navy); height: 56px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 8px; }
+    .badge-front .header img { width: 118px; }
+    .badge-front .photo-area { padding: 18px 16px 4px; display: flex; justify-content: center; }
+    .badge-front .photo-frame { width: 120px; height: 160px; background: var(--mist); display: flex; align-items: center; justify-content: center; color: var(--slate-light); overflow: hidden; }
+    .badge-front .photo-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .badge-front .photo-frame .placeholder-imago { width: 70%; height: 70%; object-fit: contain; }
+    .badge-front .teal-anchor-h { width: 60px; height: 4px; background: var(--teal-bright); margin: 12px auto 12px; }
+    .badge-front .name-block { text-align: center; padding: 0 12px; }
+    .badge-front .name-block .name { font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 18px; color: var(--navy); line-height: 1.1; letter-spacing: 0.3px; }
+    .badge-front .name-block .title { font-family: 'Barlow Condensed', sans-serif; font-weight: 500; font-size: 11px; color: var(--slate); letter-spacing: 0.4px; margin-top: 5px; }
+    .badge-front .footer { position: absolute; bottom: 0; left: 0; right: 0; background: var(--navy); height: 32px; display: flex; align-items: center; justify-content: center; color: var(--copper); font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 10px; letter-spacing: 2px; }
+    .badge-back { background: var(--navy); }
+    .badge-back .b-imago { position: absolute; top: 56px; left: 50%; transform: translateX(-50%); width: 56px; height: 56px; }
+    .badge-back .b-name { position: absolute; top: 124px; left: 0; right: 0; text-align: center; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 14px; color: white; letter-spacing: 0.3px; }
+    .badge-back .b-rule { position: absolute; top: 152px; left: 50%; transform: translateX(-50%); width: 56px; height: 2.5px; background: var(--teal-bright); }
+    .badge-back .b-qr { position: absolute; top: 170px; left: 50%; transform: translateX(-50%); background: white; padding: 6px; }
+    .badge-back .b-qr img { width: 110px; height: 110px; display: block; }
+    .badge-back .b-instruction { position: absolute; bottom: 22px; left: 16px; right: 16px; text-align: center; font-family: 'Barlow Condensed', sans-serif; font-weight: 400; font-size: 9px; color: rgba(255,255,255,0.7); letter-spacing: 0.4px; line-height: 1.4; }
+
+    .actions { display: flex; gap: 10px; }
+    .btn { flex: 1; padding: 14px 18px; border: none; cursor: pointer; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 12px; letter-spacing: 1.2px; text-transform: uppercase; }
+    .btn-primary { background: var(--navy); color: white; }
+    .btn-primary:hover { background: var(--teal-deep); }
+    .btn-primary:disabled { background: var(--slate-light); cursor: wait; }
+
+    .install-note { font-family: 'Palatino Linotype', Georgia, serif; font-style: italic; font-size: 12px; color: var(--slate); line-height: 1.55; padding: 12px 14px; background: white; border-left: 2px solid var(--teal-deep); }
+    .install-note strong { font-style: normal; color: var(--navy); font-family: 'Open Sans Brand', sans-serif; }
+    .install-note .specs { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; font-family: 'Consolas', monospace; font-style: normal; font-size: 11px; margin-top: 8px; color: var(--navy); }
+    .install-note .specs span:nth-child(odd) { color: var(--slate); }
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <img src="./assets/imago.png" alt="Aditum">
+    <h1>Tarjetas y gafetes · Cards and badges</h1>
+    <span class="meta">v2.0</span>
+  </header>
+
+  <div id="warn-bar" class="warn-bar"></div>
+
+  <div class="app-body">
+    <div class="form-panel">
+      <h2 class="section-title">Producto · Product</h2>
+      <div class="product-toggle">
+        <button id="prod-card" class="active" onclick="setProduct('card')">TARJETA</button>
+        <button id="prod-badge" onclick="setProduct('badge')">GAFETE</button>
+        <button id="prod-screen" onclick="setProduct('screen')">PANTALLA</button>
+      </div>
+
+      <h2 class="section-title">Datos · Information</h2>
+      <div class="lang-toggle">
+        <button id="btn-es" class="active" onclick="setLang('es')">ESPAÑOL</button>
+        <button id="btn-en" onclick="setLang('en')">ENGLISH</button>
+      </div>
+
+      <div class="form-group">
+        <label data-es="Nombre y apellido" data-en="First and last name">Nombre y apellido</label>
+        <input type="text" id="name" placeholder="María González">
+      </div>
+      <div class="form-group">
+        <label data-es="Correo electrónico" data-en="Email">Correo electrónico</label>
+        <input type="email" id="email" placeholder="maria.gonzalez@aditumconsulting.com">
+      </div>
+      <div class="form-group">
+        <label data-es="Puesto" data-en="Title">Puesto</label>
+        <select id="title">
+          <option value="ba">Business Analyst / Analista de Negocios</option>
+          <option value="ba-sr">Senior Business Analyst / Analista de Negocios Sr.</option>
+          <option value="consultant">Consultant / Consultor</option>
+          <option value="consultant-sr">Senior Consultant / Consultor Sr.</option>
+          <option value="manager">Manager / Gerente</option>
+          <option value="manager-sr">Senior Manager / Gerente Sr.</option>
+          <option value="custom">Personalizado / Custom</option>
+        </select>
+      </div>
+      <div id="custom-title-fields" class="custom-title-fields">
+        <div class="form-group"><label>Puesto en español</label><input type="text" id="title-custom-es" placeholder="Director de Acceso al Mercado"></div>
+        <div class="form-group"><label>Title in English</label><input type="text" id="title-custom-en" placeholder="Director of Market Access"></div>
+      </div>
+      <div class="form-group">
+        <label data-es="Celular" data-en="Mobile">Celular</label>
+        <input type="text" id="mobile1" placeholder="+52 55 1234 5678">
+      </div>
+      <div class="form-group" id="g-mobile2">
+        <label data-es="Celular alterno (opcional)" data-en="Alternate mobile (optional)">Celular alterno (opcional)</label>
+        <input type="text" id="mobile2" placeholder="+1 305 555 0123">
+      </div>
+      <div class="form-group" id="g-office">
+        <label data-es="Teléfono fijo (opcional)" data-en="Office phone (optional)">Teléfono fijo (opcional)</label>
+        <input type="text" id="office" placeholder="+52 55 5555 5555">
+      </div>
+      <div class="form-group">
+        <label data-es="LinkedIn (opcional)" data-en="LinkedIn (optional)">LinkedIn (opcional)</label>
+        <input type="text" id="linkedin" placeholder="linkedin.com/in/maria-gonzalez">
+        <div class="hint" data-es="No aparece visible. Se incluye en el QR." data-en="Not shown. Included in the QR.">No aparece visible. Se incluye en el QR.</div>
+      </div>
+
+      <div class="form-group" id="g-photo" style="display:none;">
+        <label data-es="Foto (solo para gafete)" data-en="Photo (badge only)">Foto (solo para gafete)</label>
+        <label for="photo-input" class="photo-uploader" id="photo-drop">
+          <input type="file" id="photo-input" accept="image/jpeg,image/png">
+          <div class="ph-text" id="ph-text-empty">
+            <strong data-es="Subir foto" data-en="Upload photo">Subir foto</strong>
+            <span data-es="JPG o PNG, vertical 3:4, mín. 300×400px" data-en="JPG or PNG, portrait 3:4, min 300×400px">JPG o PNG, vertical 3:4, mín. 300×400px</span>
+          </div>
+          <img class="ph-thumb" id="ph-thumb" style="display:none;">
+          <div class="ph-text" id="ph-text-loaded" style="display:none;">
+            <strong data-es="Foto cargada" data-en="Photo loaded">Foto cargada</strong>
+            <span id="ph-filename"></span>
+          </div>
+          <button class="ph-remove" id="ph-remove-btn" style="display:none;" type="button" onclick="removePhoto(event)" data-es="QUITAR" data-en="REMOVE">QUITAR</button>
+        </label>
+        <div class="hint" data-es="La foto se recorta automáticamente a 3:4. Sin foto se usa el imago." data-en="The photo is auto-cropped to 3:4. Without photo, the imago is used.">La foto se recorta automáticamente a 3:4. Sin foto se usa el imago.</div>
+      </div>
+    </div>
+
+    <div class="preview-panel">
+      <h2 class="section-title">Vista previa · Preview</h2>
+
+      <div id="view-card" class="card-pair">
+        <div class="preview-wrap">
+          <div class="label" data-es="FRENTE" data-en="FRONT">FRENTE</div>
+          <div class="card card-front">
+            <div class="navy-strip"><img src="./assets/logo_white.png" alt="Aditum Consulting"></div>
+            <div class="teal-anchor"></div>
+            <div class="info">
+              <div class="name" id="cf-name">María González</div>
+              <div class="title" id="cf-title">Analista de Negocios</div>
+              <div class="contact" id="cf-contact"></div>
+            </div>
+          </div>
+        </div>
+        <div class="preview-wrap">
+          <div class="label" data-es="REVERSO" data-en="BACK">REVERSO</div>
+          <div class="card card-back">
+            <img class="imago" src="./assets/imago.png" alt="Aditum">
+            <div class="web">www.aditumconsulting.com</div>
+            <div class="qr-label" id="cb-qr-label">Escanea para añadir contacto</div>
+            <div class="qr-wrap"><img id="cb-qr-img" alt="QR"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="view-badge" class="badge-pair" style="display:none;">
+        <div class="preview-wrap">
+          <div class="label" data-es="GAFETE FRENTE" data-en="BADGE FRONT">GAFETE FRENTE</div>
+          <div class="badge badge-front">
+            <div class="header"><img src="./assets/logo_white.png" alt="Aditum Consulting"></div>
+            <div class="photo-area">
+              <div class="photo-frame" id="bf-photo-frame"></div>
+            </div>
+            <div class="teal-anchor-h"></div>
+            <div class="name-block">
+              <div class="name" id="bf-name">María González</div>
+              <div class="title" id="bf-title">Analista de Negocios</div>
+            </div>
+            <div class="footer">WWW.ADITUMCONSULTING.COM</div>
+          </div>
+        </div>
+        <div class="preview-wrap">
+          <div class="label" data-es="GAFETE REVERSO" data-en="BADGE BACK">GAFETE REVERSO</div>
+          <div class="badge badge-back">
+            <img class="b-imago" src="./assets/imago.png" alt="Aditum">
+            <div class="b-name" id="bb-name">María González</div>
+            <div class="b-rule"></div>
+            <div class="b-qr"><img id="bb-qr-img" alt="QR"></div>
+            <div class="b-instruction" id="bb-instruction">Escanea para añadir contacto</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-primary" id="btn-pdf" onclick="generatePDF()">
+          <span data-es="Descargar PDF para imprenta" data-en="Download print-ready PDF">Descargar PDF para imprenta</span>
+        </button>
+      </div>
+
+      <div class="install-note">
+        <strong id="spec-title">Especificaciones · Tarjeta</strong>
+        <div class="specs" id="spec-table"></div>
+      </div>
+
+      <div class="install-note" style="border-left-color: var(--copper);">
+        <strong data-es="Nota para tu impresor:" data-en="Note for your printer:">Nota para tu impresor:</strong>
+        <span data-es=" PDF en sRGB. Convertir a CMYK con FOGRA39. Marcas de corte ya incluidas. En el gafete, el rectángulo punteado superior indica la ranura del lanyard (10×3mm)." data-en=" PDF in sRGB. Convert to CMYK with FOGRA39. Crop marks included. On the badge, the dashed rectangle near the top indicates the lanyard slot (10×3mm).">
+          PDF en sRGB. Convertir a CMYK con FOGRA39. Marcas de corte ya incluidas. En el gafete, el rectángulo punteado superior indica la ranura del lanyard (10×3mm).
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <script src="./lib/qrcode.js"></script>
+  <script src="./lib/pdf-lib.min.js"></script>
+  <script src="./lib/fontkit.min.js"></script>
+  <script>
+    const CONFIG = { WEBSITE: 'www.aditumconsulting.com', WEBSITE_URL: 'https://www.aditumconsulting.com' };
+    const MM = 2.83464566929;
+    const SPEC = {
+      card:  { trim_w: 90, trim_h: 55,   bleed: 3, page_w: 96, page_h: 61 },
+      badge: { trim_w: 54, trim_h: 85.6, bleed: 3, page_w: 60, page_h: 91.6 },
+      // "screen" is a phone-display card: portrait, no bleed, no crop marks.
+      // Sized at a phone-friendly aspect (≈9:16). Units still in mm for consistency
+      // with the MM→pt pipeline; 74×132mm gives a clean portrait screen card.
+      screen: { trim_w: 74, trim_h: 132, bleed: 0, page_w: 74, page_h: 132 }
+    };
+    let currentLang = 'es';
+    let currentProduct = 'card';
+    let photoDataUrl = null;
+    let photoFilename = '';
+    const TITLES = {
+      'ba':            { es: 'Analista de Negocios',     en: 'Business Analyst' },
+      'ba-sr':         { es: 'Analista de Negocios Sr.', en: 'Senior Business Analyst' },
+      'consultant':    { es: 'Consultor',                en: 'Consultant' },
+      'consultant-sr': { es: 'Consultor Sr.',            en: 'Senior Consultant' },
+      'manager':       { es: 'Gerente',                  en: 'Manager' },
+      'manager-sr':    { es: 'Gerente Sr.',              en: 'Senior Manager' }
+    };
+    const QR_LABEL = { es: 'Escanea para añadir contacto', en: 'Scan to save contact' };
+
+    function setLang(lang) {
+      currentLang = lang;
+      document.getElementById('btn-es').classList.toggle('active', lang === 'es');
+      document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+      document.querySelectorAll('[data-es][data-en]').forEach(el => {
+        const text = el.getAttribute('data-' + lang);
+        if (text !== null && el.children.length === 0) el.textContent = text;
+      });
+      document.documentElement.lang = lang;
+      updateSpecs();
+      render();
+    }
+
+    function setProduct(product) {
+      currentProduct = product;
+      document.getElementById('prod-card').classList.toggle('active', product === 'card');
+      document.getElementById('prod-badge').classList.toggle('active', product === 'badge');
+      document.getElementById('prod-screen').classList.toggle('active', product === 'screen');
+      // Preview panes: screen reuses the card preview pane for now
+      document.getElementById('view-card').style.display = (product === 'card' || product === 'screen') ? 'flex' : 'none';
+      document.getElementById('view-badge').style.display = (product === 'badge') ? 'flex' : 'none';
+      document.getElementById('g-photo').style.display = (product === 'badge') ? 'block' : 'none';
+      // Mobile2 and office only hidden for badge (screen and card show all contact fields)
+      const hideContactExtras = product === 'badge';
+      document.getElementById('g-mobile2').style.display = hideContactExtras ? 'none' : 'block';
+      document.getElementById('g-office').style.display = hideContactExtras ? 'none' : 'block';
+      updateSpecs();
+      render();
+    }
+
+    function updateSpecs() {
+      const table = document.getElementById('spec-table');
+      const title = document.getElementById('spec-title');
+      const isCard = currentProduct === 'card';
+      const isScreen = currentProduct === 'screen';
+      title.textContent = currentLang === 'es'
+        ? (isScreen ? 'Especificaciones · Pantalla' : isCard ? 'Especificaciones · Tarjeta' : 'Especificaciones · Gafete')
+        : (isScreen ? 'Specifications · Screen' : isCard ? 'Specifications · Card' : 'Specifications · Badge');
+      let items;
+      if (isScreen) {
+        items = [
+          [currentLang === 'es' ? 'Formato' : 'Format', currentLang === 'es' ? 'Vertical (pantalla)' : 'Portrait (screen)'],
+          [currentLang === 'es' ? 'Uso' : 'Use', currentLang === 'es' ? 'Mostrar en el celular' : 'Show on phone'],
+          [currentLang === 'es' ? 'Marcas de corte' : 'Crop marks', currentLang === 'es' ? 'ninguna' : 'none'],
+          ['QR vCard', currentLang === 'es' ? 'grande, escaneable' : 'large, scannable'],
+          [currentLang === 'es' ? 'Páginas' : 'Pages', '1']
+        ];
+      } else if (isCard) {
+        items = [
+          ['Trim final', '90 × 55 mm'],
+          ['Sangrado', '3 mm cada lado'],
+          ['Canvas total', '96 × 61 mm'],
+          ['Resolución', '300 DPI'],
+          ['Marcas de corte', currentLang === 'es' ? 'incluidas, 4 esquinas' : 'included, 4 corners'],
+          ['Espacio de color', 'RGB (sRGB)'],
+          [currentLang === 'es' ? 'Páginas' : 'Pages', currentLang === 'es' ? '2 (frente y reverso)' : '2 (front and back)']
+        ];
+      } else {
+        items = [
+          ['Trim final', '54 × 85.6 mm (CR80 portrait)'],
+          ['Sangrado', '3 mm cada lado'],
+          ['Canvas total', '60 × 91.6 mm'],
+          ['Resolución', '300 DPI'],
+          [currentLang === 'es' ? 'Ranura lanyard' : 'Lanyard slot', currentLang === 'es' ? '10×3 mm, centrada, 4.5 mm del borde' : '10×3 mm, centered, 4.5 mm from top'],
+          ['Marcas de corte', currentLang === 'es' ? 'incluidas, 4 esquinas' : 'included, 4 corners'],
+          ['Espacio de color', 'RGB (sRGB)'],
+          [currentLang === 'es' ? 'Páginas' : 'Pages', currentLang === 'es' ? '2 (frente y reverso)' : '2 (front and back)']
+        ];
+      }
+      table.innerHTML = '';
+      items.forEach(([k, v]) => {
+        const k1 = document.createElement('span'); k1.textContent = k; table.appendChild(k1);
+        const v1 = document.createElement('span'); v1.textContent = v; table.appendChild(v1);
+      });
+    }
+
+    function getTitle() {
+      const sel = document.getElementById('title').value;
+      if (sel === 'custom') return document.getElementById('title-custom-' + currentLang).value || '';
+      return TITLES[sel][currentLang];
+    }
+    function gatherData() {
+      return {
+        name: document.getElementById('name').value.trim(),
+        title: getTitle(),
+        email: document.getElementById('email').value.trim(),
+        mobile1: document.getElementById('mobile1').value.trim(),
+        mobile2: document.getElementById('mobile2').value.trim(),
+        office: document.getElementById('office').value.trim(),
+        linkedin: document.getElementById('linkedin').value.trim()
+      };
+    }
+    function escapeHTML(s) { if (!s) return ''; return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+    function escapeVCard(s) { if (!s) return ''; return s.replace(/\\/g,'\\\\').replace(/,/g,'\\,').replace(/;/g,'\\;').replace(/\n/g,'\\n'); }
+    function buildVCard(data) {
+      const lines = ['BEGIN:VCARD','VERSION:3.0',
+        'FN:' + escapeVCard(data.name),
+        'N:' + escapeVCard(data.name) + ';;;;',
+        'ORG:Aditum Consulting',
+        'TITLE:' + escapeVCard(data.title)];
+      if (data.mobile1) lines.push('TEL;TYPE=CELL,VOICE:' + data.mobile1);
+      if (data.mobile2) lines.push('TEL;TYPE=CELL,VOICE:' + data.mobile2);
+      if (data.office)  lines.push('TEL;TYPE=WORK,VOICE:' + data.office);
+      if (data.email)   lines.push('EMAIL;TYPE=WORK:' + data.email);
+      lines.push('URL:' + CONFIG.WEBSITE_URL);
+      if (data.linkedin) {
+        let ln = data.linkedin.trim();
+        if (!ln.startsWith('http')) ln = 'https://' + ln.replace(/^\/+/, '');
+        lines.push('URL;TYPE=LinkedIn:' + ln);
+      }
+      lines.push('END:VCARD');
+      return lines.join('\r\n');
+    }
+    function generateQR(data) { const qr = qrcode(0, 'M'); qr.addData(buildVCard(data)); qr.make(); return qr; }
+    function qrToDataURL(qr) { return qr.createDataURL(4, 0); }
+    function qrModuleMatrix(qr) {
+      const count = qr.getModuleCount();
+      const m = [];
+      for (let r = 0; r < count; r++) { m[r] = []; for (let c = 0; c < count; c++) m[r][c] = qr.isDark(r, c); }
+      return m;
+    }
+
+    // Shrink-to-fit: returns the largest font size (≤ maxSize) at which `text`
+    // fits within `maxWidth` for the given font, never going below `minSize`.
+    // Handles long compound LATAM names (two given names + two surnames) gracefully.
+    function fitTextSize(text, font, maxSize, maxWidth, minSize) {
+      let size = maxSize;
+      while (size > minSize && font.widthOfTextAtSize(text, size) > maxWidth) {
+        size -= 0.25;
+      }
+      return size;
+    }
+
+    // Photo handling
+    document.getElementById('photo-input').addEventListener('change', function(ev) {
+      const file = ev.target.files[0];
+      if (!file) return;
+      photoFilename = file.name;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const aspect = 3 / 4;
+          let sw = img.width, sh = img.height, sx = 0, sy = 0;
+          if (sw / sh > aspect) { sw = sh * aspect; sx = (img.width - sw) / 2; }
+          else { sh = sw / aspect; sy = (img.height - sh) / 2; }
+          const canvas = document.createElement('canvas');
+          canvas.width = 600; canvas.height = 800;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, sx, sy, sw, sh, 0, 0, 600, 800);
+          photoDataUrl = canvas.toDataURL('image/jpeg', 0.92);
+          updatePhotoUI();
+          render();
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    function updatePhotoUI() {
+      const wrap = document.getElementById('photo-drop');
+      const empty = document.getElementById('ph-text-empty');
+      const loaded = document.getElementById('ph-text-loaded');
+      const thumb = document.getElementById('ph-thumb');
+      const removeBtn = document.getElementById('ph-remove-btn');
+      const filename = document.getElementById('ph-filename');
+      if (photoDataUrl) {
+        wrap.classList.add('has-photo');
+        empty.style.display = 'none';
+        loaded.style.display = 'block';
+        thumb.style.display = 'block';
+        thumb.src = photoDataUrl;
+        removeBtn.style.display = 'inline-block';
+        filename.textContent = photoFilename;
+      } else {
+        wrap.classList.remove('has-photo');
+        empty.style.display = 'block';
+        loaded.style.display = 'none';
+        thumb.style.display = 'none';
+        removeBtn.style.display = 'none';
+      }
+    }
+    function removePhoto(ev) {
+      ev.stopPropagation(); ev.preventDefault();
+      photoDataUrl = null; photoFilename = '';
+      document.getElementById('photo-input').value = '';
+      updatePhotoUI();
+      render();
+    }
+
+    function render() {
+      const data = gatherData();
+      document.getElementById('cf-name').textContent = data.name || '\u00A0';
+      document.getElementById('cf-title').textContent = data.title || '\u00A0';
+      const contactDiv = document.getElementById('cf-contact');
+      contactDiv.innerHTML = '';
+      function row(icon, text) {
+        if (!text) return '';
+        return '<div class="contact-row"><img src="./assets/icon-' + icon + '.png" alt=""><span>' + escapeHTML(text) + '</span></div>';
+      }
+      contactDiv.innerHTML =
+        row('mobile', data.mobile1) +
+        row('mobile', data.mobile2) +
+        row('phone',  data.office) +
+        row('mail',   data.email) +
+        row('web',    CONFIG.WEBSITE);
+
+      document.getElementById('bf-name').textContent = data.name || '\u00A0';
+      document.getElementById('bf-title').textContent = data.title || '\u00A0';
+      document.getElementById('bb-name').textContent = data.name || '\u00A0';
+
+      const frame = document.getElementById('bf-photo-frame');
+      frame.innerHTML = '';
+      if (photoDataUrl) {
+        const im = document.createElement('img');
+        im.src = photoDataUrl;
+        frame.appendChild(im);
+      } else {
+        const im = document.createElement('img');
+        im.src = './assets/imago.png';
+        im.className = 'placeholder-imago';
+        frame.appendChild(im);
+      }
+
+      try {
+        const qr = generateQR(data);
+        const dataUrl = qrToDataURL(qr);
+        document.getElementById('cb-qr-img').src = dataUrl;
+        document.getElementById('bb-qr-img').src = dataUrl;
+      } catch (e) { console.error(e); }
+      document.getElementById('cb-qr-label').textContent = QR_LABEL[currentLang];
+      document.getElementById('bb-instruction').textContent = QR_LABEL[currentLang];
+    }
+
+    async function fetchBytes(path) {
+      return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', path, true);
+        xhr.responseType = 'arraybuffer';
+        xhr.onload = () => {
+          if (xhr.status === 0 || (xhr.status >= 200 && xhr.status < 300)) resolve(new Uint8Array(xhr.response));
+          else reject(new Error('Failed: ' + path));
+        };
+        xhr.onerror = () => reject(new Error('Network: ' + path));
+        xhr.send();
+      });
+    }
+    function dataUrlToUint8(dataUrl) {
+      const base64 = dataUrl.split(',')[1];
+      const raw = atob(base64);
+      const arr = new Uint8Array(raw.length);
+      for (let i = 0; i < raw.length; i++) arr[i] = raw.charCodeAt(i);
+      return arr;
+    }
+
+    function drawCropMarks(page, pageW, pageH, bleed, NS) {
+      const { rgb } = NS;
+      const black = rgb(0, 0, 0);
+      const markLen = 3.5 * MM;
+      const markOffset = 1.5 * MM;
+      const lineWidth = 0.5;
+      const BL = { x: bleed, y: bleed };
+      const BR = { x: pageW - bleed, y: bleed };
+      const TL = { x: bleed, y: pageH - bleed };
+      const TR = { x: pageW - bleed, y: pageH - bleed };
+      const m = (s, e) => page.drawLine({ start: s, end: e, thickness: lineWidth, color: black });
+      m({ x: BL.x - markOffset, y: BL.y }, { x: BL.x - markOffset - markLen, y: BL.y });
+      m({ x: BL.x, y: BL.y - markOffset }, { x: BL.x, y: BL.y - markOffset - markLen });
+      m({ x: BR.x + markOffset, y: BR.y }, { x: BR.x + markOffset + markLen, y: BR.y });
+      m({ x: BR.x, y: BR.y - markOffset }, { x: BR.x, y: BR.y - markOffset - markLen });
+      m({ x: TL.x - markOffset, y: TL.y }, { x: TL.x - markOffset - markLen, y: TL.y });
+      m({ x: TL.x, y: TL.y + markOffset }, { x: TL.x, y: TL.y + markOffset + markLen });
+      m({ x: TR.x + markOffset, y: TR.y }, { x: TR.x + markOffset + markLen, y: TR.y });
+      m({ x: TR.x, y: TR.y + markOffset }, { x: TR.x, y: TR.y + markOffset + markLen });
+    }
+    function drawLanyardSlot(page, pageW, pageH, bleed, NS) {
+      const { rgb } = NS;
+      const slotW = 10 * MM; const slotH = 3 * MM;
+      const slotX = (pageW - slotW) / 2;
+      const slotY = pageH - bleed - 4.5 * MM - slotH;
+      const lineCol = rgb(0.55, 0.55, 0.55);
+      const lineW = 0.4;
+      page.drawLine({ start: { x: slotX, y: slotY }, end: { x: slotX + slotW, y: slotY }, thickness: lineW, color: lineCol });
+      page.drawLine({ start: { x: slotX, y: slotY + slotH }, end: { x: slotX + slotW, y: slotY + slotH }, thickness: lineW, color: lineCol });
+      page.drawLine({ start: { x: slotX, y: slotY }, end: { x: slotX, y: slotY + slotH }, thickness: lineW, color: lineCol });
+      page.drawLine({ start: { x: slotX + slotW, y: slotY }, end: { x: slotX + slotW, y: slotY + slotH }, thickness: lineW, color: lineCol });
+    }
+
+    async function loadCommon(pdf) {
+      const [logo, imago, im, ip, iml, iw, fBS, fBM, fBR, fOR, fOS] = await Promise.all([
+        fetchBytes('./assets/logo_print_white.png'),
+        fetchBytes('./assets/imago_print.png'),
+        fetchBytes('./assets/icon-mobile.png'),
+        fetchBytes('./assets/icon-phone.png'),
+        fetchBytes('./assets/icon-mail.png'),
+        fetchBytes('./assets/icon-web.png'),
+        fetchBytes('./assets/fonts/BarlowCondensed-SemiBold.ttf'),
+        fetchBytes('./assets/fonts/BarlowCondensed-Medium.ttf'),
+        fetchBytes('./assets/fonts/BarlowCondensed-Regular.ttf'),
+        fetchBytes('./assets/fonts/OpenSans-Regular.ttf'),
+        fetchBytes('./assets/fonts/OpenSans-SemiBold.ttf')
+      ]);
+      pdf.registerFontkit(window.fontkit);
+      return {
+        logo: await pdf.embedPng(logo),
+        imago: await pdf.embedPng(imago),
+        icons: {
+          mobile: await pdf.embedPng(im),
+          phone: await pdf.embedPng(ip),
+          mail: await pdf.embedPng(iml),
+          web: await pdf.embedPng(iw)
+        },
+        fonts: {
+          barlowSemi: await pdf.embedFont(fBS),
+          barlowMed: await pdf.embedFont(fBM),
+          barlowReg: await pdf.embedFont(fBR),
+          openReg: await pdf.embedFont(fOR),
+          openSemi: await pdf.embedFont(fOS)
+        }
+      };
+    }
+
+    async function generatePDF() {
+      const btn = document.getElementById('btn-pdf');
+      const span = btn.querySelector('span');
+      const orig = span.textContent;
+      btn.disabled = true;
+      span.textContent = currentLang === 'es' ? 'Generando…' : 'Generating…';
+      try {
+        if (currentProduct === 'card') await generateCardPDF();
+        else if (currentProduct === 'badge') await generateBadgePDF();
+        else await generateScreenPDF();
+        span.textContent = currentLang === 'es' ? '✓ Descargado' : '✓ Downloaded';
+      } catch (e) {
+        console.error(e);
+        alert('Error: ' + e.message);
+        span.textContent = orig;
+      }
+      setTimeout(() => { span.textContent = orig; btn.disabled = false; }, 2000);
+    }
+
+    async function generateCardPDF() {
+      const { PDFDocument, rgb } = PDFLib;
+      const data = gatherData();
+      const pdf = await PDFDocument.create();
+      pdf.setTitle('Aditum Business Card - ' + (data.name || 'unnamed'));
+      pdf.setAuthor('Aditum Consulting');
+      pdf.setCreator('Aditum Card Generator v3.0');
+      pdf.setSubject('Business card · 90×55mm · 3mm bleed · 300 DPI');
+      const ast = await loadCommon(pdf);
+
+      // Also load the full-color logo for use on white background
+      const logoColorBytes = await fetchBytes('./assets/logo_print_color.png');
+      const logoColor = await pdf.embedPng(logoColorBytes);
+
+      const NAVY = rgb(10/255, 46/255, 92/255);
+      const TEAL_BRIGHT = rgb(42/255, 139/255, 159/255);
+      const COPPER = rgb(184/255, 112/255, 74/255);
+      const SLATE = rgb(90/255, 107/255, 125/255);
+      const SLATE_LIGHT = rgb(136/255, 149/255, 164/255);
+      const WHITE = rgb(1, 1, 1);
+
+      const spec = SPEC.card;
+      const pageW = spec.page_w * MM;
+      const pageH = spec.page_h * MM;
+      const bleed = spec.bleed * MM;
+
+      // ============================================================
+      // FRONT — "Imago as visual anchor"
+      // Large imago anchors left side. Name and contact data right.
+      // The gradient of the imago IS the brand statement.
+      // ============================================================
+      const front = pdf.addPage([pageW, pageH]);
+      // Implicit white background.
+
+      const safeMarginX = bleed + 5 * MM;
+      const safeMarginY = bleed + 5 * MM;
+      const trimTopY = pageH - bleed;
+      const trimBottomY = bleed;
+
+      // === IMAGO — large visual anchor, contained within trim ===
+      // 34mm tall, sized so content column has comfortable width for long emails.
+      // Vertically centered relative to trim.
+      const imagoSize = 32 * MM;
+      const imagoX = bleed + 3 * MM;
+      const trimCenterY = (trimTopY + trimBottomY) / 2;
+      const imagoY = trimCenterY - imagoSize / 2;
+      front.drawImage(ast.imago, {
+        x: imagoX, y: imagoY,
+        width: imagoSize, height: imagoSize
+      });
+
+      // Content column
+      const contentX = imagoX + imagoSize + 4 * MM;
+      const contentRightX = pageW - bleed - 3.5 * MM;
+      const contentW = contentRightX - contentX;
+      // Visual horizontal center of the content column for alignment with imago center
+      const contentCenterX = (contentX + contentRightX) / 2;
+
+      // === BUILD CONTACT ROWS (only filled fields) ===
+      const rows = [];
+      if (data.mobile1) rows.push({ label: 'M.', text: data.mobile1 });
+      if (data.mobile2) rows.push({ label: 'M.', text: data.mobile2 });
+      if (data.office)  rows.push({ label: 'T.', text: data.office });
+      if (data.email)   rows.push({ label: 'E.', text: data.email });
+      rows.push({ label: 'W.', text: CONFIG.WEBSITE });
+
+      // === TYPOGRAPHIC SPEC ===
+      // Name auto-shrinks to fit the content column (handles long compound names).
+      const name = data.name || '';
+      const nameSize = fitTextSize(name, ast.fonts.barlowSemi, 16, contentW, 10);
+      const titleSize = 9;
+      const contactSize = 7.2;
+      const labelSize = 6.5;
+      const nameToTitleGap = 5.5 * MM;
+      const titleToAccentGap = 3.5 * MM;
+      const accentH = 1.2;                // 1.2 pt
+      const accentToContactGap = 3.8 * MM;
+      const contactLineH = 3.3 * MM;
+      const labelColW = 4 * MM;
+
+      // === COMPUTE TOTAL BLOCK HEIGHT (all in PDF points) ===
+      // The block visual extent: from TOP of name → BOTTOM of last contact row's descenders.
+      //   topOfName  → baselineOfName: nameSize * 0.72 (cap height)
+      //   baselineOfName → baselineOfTitle: nameToTitleGap
+      //   baselineOfTitle → topOfAccent:  titleToAccentGap
+      //   topOfAccent → bottomOfAccent: accentH
+      //   bottomOfAccent → baselineOfFirstContact: accentToContactGap
+      //   between contact baselines: contactLineH (n-1 times)
+      //   baselineOfLastContact → bottomOfLastContact (descender): contactSize * 0.22
+      const nameCapH = nameSize * 0.72;
+      const contactDescenderH = contactSize * 0.22;
+      const totalH =
+        nameCapH
+        + nameToTitleGap
+        + titleToAccentGap
+        + accentH
+        + accentToContactGap
+        + (rows.length - 1) * contactLineH
+        + contactDescenderH;
+
+      // Center block vertically against imago's VISUAL center (not the PNG bounding box).
+      // The imago PNG has transparent margin (top ~6.8% and bottom ~6.9% are empty pixels).
+      // Visual extent in the rendered imago: imagoY + 0.068*imagoSize to imagoY + 0.931*imagoSize.
+      // Visual center: midpoint of those bounds.
+      const imagoVisualCenterY = imagoY + imagoSize * (0.068 + 0.931) / 2;
+      const topOfNameY = imagoVisualCenterY + totalH / 2;
+      const nameY = topOfNameY - nameCapH;
+      // === NAME — left-aligned at contentX ===
+      front.drawText(name, {
+        x: contentX, y: nameY,
+        size: nameSize, font: ast.fonts.barlowSemi, color: NAVY
+      });
+
+      // === TITLE — left-aligned ===
+      const titleY = nameY - nameToTitleGap;
+      front.drawText(data.title || '', {
+        x: contentX, y: titleY,
+        size: titleSize, font: ast.fonts.barlowMed, color: SLATE
+      });
+
+      // === TEAL ACCENT — left-aligned (anchored at contentX) ===
+      const accentY = titleY - titleToAccentGap;
+      front.drawRectangle({
+        x: contentX, y: accentY,
+        width: 14 * MM, height: accentH,
+        color: TEAL_BRIGHT
+      });
+
+      // === CONTACT ROWS — left-aligned, labels in fixed column ===
+      // Each row's text auto-shrinks if needed (e.g. very long email addresses).
+      const contactTextMaxW = contentRightX - (contentX + labelColW);
+      let cy = accentY - accentToContactGap;
+      for (const r of rows) {
+        front.drawText(r.label, {
+          x: contentX, y: cy,
+          size: labelSize, font: ast.fonts.barlowMed, color: TEAL_BRIGHT
+        });
+        const rowSize = fitTextSize(r.text, ast.fonts.openReg, contactSize, contactTextMaxW, 5.5);
+        front.drawText(r.text, {
+          x: contentX + labelColW, y: cy,
+          size: rowSize, font: ast.fonts.openReg, color: SLATE
+        });
+        cy -= contactLineH;
+      }
+
+      drawCropMarks(front, pageW, pageH, bleed, PDFLib);
+
+      // ============================================================
+      // BACK — Navy with FULL logo (imago + wordmark) and QR
+      // Logo completo blanco en parte superior. QR centrado con respiración.
+      // ============================================================
+      const back = pdf.addPage([pageW, pageH]);
+      back.drawRectangle({ x: 0, y: 0, width: pageW, height: pageH, color: NAVY });
+
+      // === FULL LOGO (imago + ADITUM CONSULTING wordmark) in white reverse ===
+      // Uses the logo_print_white asset which has imago gradient preserved + wordmark in white.
+      const bLogoMaxW = 50 * MM;  // generous, gives it presence on the back
+      const bLogoAspect = ast.logo.width / ast.logo.height;
+      const bLogoW = bLogoMaxW;
+      const bLogoH = bLogoW / bLogoAspect;
+      const bLogoX = (pageW - bLogoW) / 2;
+      const bLogoY = pageH - bleed - 7 * MM - bLogoH;
+      back.drawImage(ast.logo, { x: bLogoX, y: bLogoY, width: bLogoW, height: bLogoH });
+
+      // === QR centered, with generous spacing from logo above ===
+      const qrSize = 18 * MM;
+      const qrPad = 1.5 * MM;
+      const qrX = (pageW - qrSize) / 2;
+      // Place QR centered between logo bottom and web text top with comfortable padding
+      const qrY = bLogoY - 5 * MM - qrSize;
+      back.drawRectangle({
+        x: qrX - qrPad, y: qrY - qrPad,
+        width: qrSize + 2 * qrPad, height: qrSize + 2 * qrPad,
+        color: WHITE
+      });
+      const qr = generateQR(data);
+      const matrix = qrModuleMatrix(qr);
+      const mc = matrix.length;
+      const ms = qrSize / mc;
+      for (let r = 0; r < mc; r++) for (let c = 0; c < mc; c++) {
+        if (matrix[r][c]) back.drawRectangle({ x: qrX + c*ms, y: qrY + (mc-1-r)*ms, width: ms, height: ms, color: NAVY });
+      }
+
+      // === Web URL in copper at bottom, letterspaced ===
+      const webText = CONFIG.WEBSITE.toUpperCase();
+      const webSize = 7;
+      const letterSpace = 1.0;
+      let webWidth = 0;
+      for (const ch of webText) webWidth += ast.fonts.barlowSemi.widthOfTextAtSize(ch, webSize) + letterSpace;
+      webWidth -= letterSpace;
+      let wx = (pageW - webWidth) / 2;
+      const wy = trimBottomY + 4.5 * MM;
+      for (const ch of webText) {
+        back.drawText(ch, { x: wx, y: wy, size: webSize, font: ast.fonts.barlowSemi, color: COPPER });
+        wx += ast.fonts.barlowSemi.widthOfTextAtSize(ch, webSize) + letterSpace;
+      }
+
+      drawCropMarks(back, pageW, pageH, bleed, PDFLib);
+      await savePDF(pdf, data, 'tarjeta');
+    }
+
+    async function generateBadgePDF() {
+      const { PDFDocument, rgb } = PDFLib;
+      const data = gatherData();
+      const pdf = await PDFDocument.create();
+      pdf.setTitle('Aditum Badge - ' + (data.name || 'unnamed'));
+      pdf.setAuthor('Aditum Consulting');
+      pdf.setCreator('Aditum Badge Generator v2.0');
+      pdf.setSubject('Employee badge · CR80 portrait 54×85.6mm · 3mm bleed · 300 DPI');
+      const ast = await loadCommon(pdf);
+
+      const NAVY = rgb(10/255, 46/255, 92/255);
+      const TEAL_BRIGHT = rgb(42/255, 139/255, 159/255);
+      const COPPER = rgb(184/255, 112/255, 74/255);
+      const SLATE = rgb(90/255, 107/255, 125/255);
+      const MIST = rgb(232/255, 240/255, 242/255);
+      const WHITE = rgb(1, 1, 1);
+
+      const spec = SPEC.badge;
+      const pageW = spec.page_w * MM;
+      const pageH = spec.page_h * MM;
+      const bleed = spec.bleed * MM;
+
+      let photoImg = null;
+      if (photoDataUrl) photoImg = await pdf.embedJpg(dataUrlToUint8(photoDataUrl));
+
+      // ============================================================
+      // FRONT — "Quiet Confidence"
+      // Photo dominates upper half. Oversized name below.
+      // Tiny logo in footer. Single teal accent line. White background.
+      // ============================================================
+      const front = pdf.addPage([pageW, pageH]);
+      // White background (default).
+
+      // Also load color logo for use on white
+      const logoColorBytesB = await fetchBytes('./assets/logo_print_color.png');
+      const logoColor = await pdf.embedPng(logoColorBytesB);
+
+      const trimTopY = pageH - bleed;
+      const trimBottomY = bleed;
+
+      // === PHOTO — dominant element, top portion of card ===
+      // Big photo, 38mm wide × 50.66mm tall (3:4), starts below lanyard zone (~9mm from top).
+      // Top of photo: 9mm below trim top edge (clear of lanyard).
+      const photoW = 38 * MM;
+      const photoH = photoW * 4 / 3;       // ~50.66mm
+      const photoX = (pageW - photoW) / 2;
+      const photoTopY = trimTopY - 9 * MM;
+      const photoY = photoTopY - photoH;
+      if (photoImg) {
+        front.drawImage(photoImg, { x: photoX, y: photoY, width: photoW, height: photoH });
+      } else {
+        // Fallback: mist background with imago
+        front.drawRectangle({ x: photoX, y: photoY, width: photoW, height: photoH, color: MIST });
+        const fbImago = 22 * MM;
+        front.drawImage(ast.imago, {
+          x: (pageW - fbImago) / 2,
+          y: photoY + (photoH - fbImago) / 2,
+          width: fbImago, height: fbImago
+        });
+      }
+
+      // === SINGLE TEAL ACCENT below photo — the only chromatic gesture ===
+      // 16mm × 1.5pt, centered. Echoes the card's accent line.
+      const bAccentY = photoY - 4 * MM;
+      front.drawRectangle({
+        x: (pageW - 16 * MM) / 2,
+        y: bAccentY,
+        width: 16 * MM,
+        height: 1.5,
+        color: TEAL_BRIGHT
+      });
+
+      // === NAME — oversized hero, auto-shrinks to fit (handles long compound names) ===
+      const name = data.name || '';
+      const title = data.title || '';
+      // Available width: trim width minus comfortable side margins
+      const badgeNameMaxW = pageW - 2 * (bleed + 3 * MM);
+      const nameSize = fitTextSize(name, ast.fonts.barlowSemi, 15, badgeNameMaxW, 10);
+      const titleSize = 9;
+      const nameWidth = ast.fonts.barlowSemi.widthOfTextAtSize(name, nameSize);
+      const titleWidth = ast.fonts.barlowMed.widthOfTextAtSize(title, titleSize);
+      const nameY = bAccentY - 5.5 * MM;
+      front.drawText(name, {
+        x: (pageW - nameWidth) / 2,
+        y: nameY,
+        size: nameSize, font: ast.fonts.barlowSemi, color: NAVY
+      });
+
+      // === TITLE — below name, smaller, slate ===
+      const titleY = nameY - 4.5 * MM;
+      front.drawText(title, {
+        x: (pageW - titleWidth) / 2,
+        y: titleY,
+        size: titleSize, font: ast.fonts.barlowMed, color: SLATE
+      });
+
+      // === LOGO — small, footer area ===
+      // Discreet, centered in the bottom of the safe area.
+      const bLogoW = 18 * MM;
+      const bLogoAspect = logoColor.width / logoColor.height;
+      const bLogoH = bLogoW / bLogoAspect;
+      front.drawImage(logoColor, {
+        x: (pageW - bLogoW) / 2,
+        y: trimBottomY + 4 * MM,
+        width: bLogoW, height: bLogoH
+      });
+
+      drawLanyardSlot(front, pageW, pageH, bleed, PDFLib);
+      drawCropMarks(front, pageW, pageH, bleed, PDFLib);
+
+      // ============================================================
+      // BACK — Navy minimal: large QR centered. Web in copper.
+      // Same minimalist ceremony as the card back.
+      // ============================================================
+      const back = pdf.addPage([pageW, pageH]);
+      back.drawRectangle({ x: 0, y: 0, width: pageW, height: pageH, color: NAVY });
+
+      // === FULL LOGO (imago + wordmark) in white reverse ===
+      // Account for lanyard slot zone at top (occupies ~7.5mm from trim top edge).
+      const bbLogoMaxW = 40 * MM;
+      const bbLogoAspect = ast.logo.width / ast.logo.height;
+      const bbLogoW = bbLogoMaxW;
+      const bbLogoH = bbLogoW / bbLogoAspect;
+      const bbLogoX = (pageW - bbLogoW) / 2;
+      const bbLogoY = pageH - bleed - 11 * MM - bbLogoH;  // 11mm clears lanyard zone
+      back.drawImage(ast.logo, { x: bbLogoX, y: bbLogoY, width: bbLogoW, height: bbLogoH });
+
+      // === Name in white below logo (auto-shrinks for long names) ===
+      const bbNameMaxW = pageW - 2 * (bleed + 3 * MM);
+      const bbNameSize = fitTextSize(name, ast.fonts.barlowSemi, 11, bbNameMaxW, 8);
+      const bbNameWidth = ast.fonts.barlowSemi.widthOfTextAtSize(name, bbNameSize);
+      const bbNameY = bbLogoY - 6 * MM;
+      back.drawText(name, {
+        x: (pageW - bbNameWidth) / 2, y: bbNameY,
+        size: bbNameSize, font: ast.fonts.barlowSemi, color: WHITE
+      });
+
+      // === QR — large, centered, with comfortable breathing room ===
+      const bQrSize = 28 * MM;
+      const bQrPad = 1.8 * MM;
+      const bQrX = (pageW - bQrSize) / 2;
+      const bQrY = bbNameY - 5 * MM - bQrSize;
+      back.drawRectangle({
+        x: bQrX - bQrPad, y: bQrY - bQrPad,
+        width: bQrSize + 2 * bQrPad, height: bQrSize + 2 * bQrPad,
+        color: WHITE
+      });
+      const bqr = generateQR(data);
+      const bMatrix = qrModuleMatrix(bqr);
+      const bMc = bMatrix.length;
+      const bMs = bQrSize / bMc;
+      for (let r = 0; r < bMc; r++) for (let c = 0; c < bMc; c++) {
+        if (bMatrix[r][c]) back.drawRectangle({ x: bQrX + c*bMs, y: bQrY + (bMc-1-r)*bMs, width: bMs, height: bMs, color: NAVY });
+      }
+
+      // === Web text in copper at bottom ===
+      const bWebText = CONFIG.WEBSITE.toUpperCase();
+      const bWebSize = 7;
+      const bLetterSpace = 1.0;
+      let bWebWidth = 0;
+      for (const ch of bWebText) bWebWidth += ast.fonts.barlowSemi.widthOfTextAtSize(ch, bWebSize) + bLetterSpace;
+      bWebWidth -= bLetterSpace;
+      let bwx = (pageW - bWebWidth) / 2;
+      const bwy = trimBottomY + 5 * MM;
+      for (const ch of bWebText) {
+        back.drawText(ch, { x: bwx, y: bwy, size: bWebSize, font: ast.fonts.barlowSemi, color: COPPER });
+        bwx += ast.fonts.barlowSemi.widthOfTextAtSize(ch, bWebSize) + bLetterSpace;
+      }
+
+      drawLanyardSlot(back, pageW, pageH, bleed, PDFLib);
+      drawCropMarks(back, pageW, pageH, bleed, PDFLib);
+
+      await savePDF(pdf, data, 'gafete');
+    }
+
+    // ============================================================
+    // SCREEN — digital card to show on a phone
+    // Portrait, navy background, no crop marks. Large scannable QR.
+    // The other person scans it; you just show your screen.
+    // ============================================================
+    async function generateScreenPDF() {
+      const { PDFDocument, rgb } = PDFLib;
+      const data = gatherData();
+      const pdf = await PDFDocument.create();
+      pdf.setTitle('Aditum Digital Card - ' + (data.name || 'unnamed'));
+      pdf.setAuthor('Aditum Consulting');
+      pdf.setCreator('Aditum Card Generator v4.0');
+      pdf.setSubject('Digital card for phone display · portrait · vCard QR');
+      const ast = await loadCommon(pdf);
+
+      const NAVY = rgb(10/255, 46/255, 92/255);
+      const TEAL_BRIGHT = rgb(42/255, 139/255, 159/255);
+      const COPPER = rgb(184/255, 112/255, 74/255);
+      const SLATE_LIGHT = rgb(136/255, 149/255, 164/255);
+      const WHITE = rgb(1, 1, 1);
+
+      const spec = SPEC.screen;
+      const pageW = spec.page_w * MM;
+      const pageH = spec.page_h * MM;
+
+      const page = pdf.addPage([pageW, pageH]);
+      // Full navy background (premium, matches card back language)
+      page.drawRectangle({ x: 0, y: 0, width: pageW, height: pageH, color: NAVY });
+
+      const cx = pageW / 2;          // horizontal center
+      const sideMargin = 8 * MM;
+
+      // === IMAGO at top, centered ===
+      const imagoSize = 26 * MM;
+      const imagoY = pageH - 11 * MM - imagoSize;
+      page.drawImage(ast.imago, {
+        x: cx - imagoSize / 2, y: imagoY,
+        width: imagoSize, height: imagoSize
+      });
+
+      // === NAME — white, centered, auto-shrinks for long names ===
+      const name = data.name || '';
+      const screenNameMaxW = pageW - 2 * (10 * MM);
+      const nameSize = fitTextSize(name, ast.fonts.barlowSemi, 17, screenNameMaxW, 11);
+      const nameWidth = ast.fonts.barlowSemi.widthOfTextAtSize(name, nameSize);
+      const nameY = imagoY - 8 * MM;
+      page.drawText(name, {
+        x: cx - nameWidth / 2, y: nameY,
+        size: nameSize, font: ast.fonts.barlowSemi, color: WHITE
+      });
+
+      // === TITLE — slate-light, centered ===
+      const titleSize = 10;
+      const titleStr = data.title || '';
+      const titleWidth = ast.fonts.barlowMed.widthOfTextAtSize(titleStr, titleSize);
+      const titleY = nameY - 5.5 * MM;
+      page.drawText(titleStr, {
+        x: cx - titleWidth / 2, y: titleY,
+        size: titleSize, font: ast.fonts.barlowMed, color: SLATE_LIGHT
+      });
+
+      // === TEAL ACCENT — centered ===
+      const accentW = 16 * MM;
+      const accentY = titleY - 4.5 * MM;
+      page.drawRectangle({
+        x: cx - accentW / 2, y: accentY,
+        width: accentW, height: 1.5,
+        color: TEAL_BRIGHT
+      });
+
+      // === QR — large, white background, dominant ===
+      const qrSize = 36 * MM;
+      const qrPad = 2.5 * MM;
+      const qrX = cx - qrSize / 2;
+      const qrY = accentY - 5 * MM - qrSize;
+      page.drawRectangle({
+        x: qrX - qrPad, y: qrY - qrPad,
+        width: qrSize + 2 * qrPad, height: qrSize + 2 * qrPad,
+        color: WHITE
+      });
+      const qr = generateQR(data);
+      const matrix = qrModuleMatrix(qr);
+      const mc = matrix.length;
+      const ms = qrSize / mc;
+      for (let r = 0; r < mc; r++) for (let c = 0; c < mc; c++) {
+        if (matrix[r][c]) page.drawRectangle({ x: qrX + c*ms, y: qrY + (mc-1-r)*ms, width: ms, height: ms, color: NAVY });
+      }
+
+      // === "Scan to save contact" microcopy below QR ===
+      const scanLabel = QR_LABEL[currentLang];
+      const scanSize = 8;
+      const scanWidth = ast.fonts.barlowReg.widthOfTextAtSize(scanLabel, scanSize);
+      const scanY = qrY - qrPad - 5.5 * MM;
+      page.drawText(scanLabel, {
+        x: cx - scanWidth / 2, y: scanY,
+        size: scanSize, font: ast.fonts.barlowReg, color: SLATE_LIGHT
+      });
+
+      // === Contact quick-reference — at most 2 key lines (QR carries the full set) ===
+      // Showing every number is redundant since the QR already contains the full vCard.
+      // We show the primary mobile and email as a courtesy for quick visual reference.
+      const rows = [];
+      if (data.mobile1) rows.push(data.mobile1);
+      if (data.email)   rows.push(data.email);
+      const contactSize = 8.5;
+      const contactLineH = 4.6 * MM;
+      let ccy = scanY - 6.5 * MM;
+      for (const text of rows) {
+        const tw = ast.fonts.openReg.widthOfTextAtSize(text, contactSize);
+        page.drawText(text, {
+          x: cx - tw / 2, y: ccy,
+          size: contactSize, font: ast.fonts.openReg, color: WHITE
+        });
+        ccy -= contactLineH;
+      }
+
+      // === Web URL in copper at bottom, letterspaced (fixed position, no overlap) ===
+      const webText = CONFIG.WEBSITE.toUpperCase();
+      const webSize = 7.5;
+      const letterSpace = 1.0;
+      let webWidth = 0;
+      for (const ch of webText) webWidth += ast.fonts.barlowSemi.widthOfTextAtSize(ch, webSize) + letterSpace;
+      webWidth -= letterSpace;
+      let wx = cx - webWidth / 2;
+      const wy = 9 * MM;
+      for (const ch of webText) {
+        page.drawText(ch, { x: wx, y: wy, size: webSize, font: ast.fonts.barlowSemi, color: COPPER });
+        wx += ast.fonts.barlowSemi.widthOfTextAtSize(ch, webSize) + letterSpace;
+      }
+
+      await savePDF(pdf, data, 'pantalla');
+    }
+
+    async function savePDF(pdf, data, kind) {
+      const pdfBytes = await pdf.save();
+      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      const safeName = (data.name || 'aditum').replace(/[^a-zA-Z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+      a.href = url;
+      a.download = 'aditum_' + kind + '_' + safeName + '_' + currentLang + '_imprenta.pdf';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    if (window.location.protocol === 'file:') {
+      const bar = document.getElementById('warn-bar');
+      bar.classList.add('show');
+      bar.textContent = 'Modo local (file://). Si la descarga falla, despliega en GitHub Pages.';
+    }
+
+    ['name','email','mobile1','mobile2','office','linkedin','title-custom-es','title-custom-en'].forEach(id => {
+      document.getElementById(id).addEventListener('input', render);
+    });
+    document.getElementById('title').addEventListener('change', e => {
+      document.getElementById('custom-title-fields').classList.toggle('active', e.target.value === 'custom');
+      render();
+    });
+
+    document.getElementById('name').value = 'María Guadalupe Rodríguez Hernández';
+    document.getElementById('email').value = 'guadalupe.rodriguez@aditumconsulting.com';
+    document.getElementById('mobile1').value = '+52 55 1234 5678';
+    document.getElementById('linkedin').value = 'linkedin.com/in/guadalupe-rodriguez';
+
+    updateSpecs();
+    setProduct('card');
+    render();
+  </script>
+</body>
+</html>
