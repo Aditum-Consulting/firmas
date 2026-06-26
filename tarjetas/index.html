@@ -55,23 +55,24 @@
     .preview-wrap { position: relative; padding-top: 22px; }
     .preview-wrap .label { position: absolute; top: 0; left: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 10px; letter-spacing: 1.5px; color: var(--slate); text-transform: uppercase; }
 
-    /* CARD: 90×55mm → 360×220 px */
-    .card { width: 360px; height: 220px; background: white; box-shadow: 0 2px 12px rgba(10,46,92,0.12); position: relative; overflow: hidden; font-family: 'Open Sans Brand', sans-serif; }
-    .card-front .navy-strip { position: absolute; left: 0; top: 0; width: 140px; height: 100%; background: var(--navy); }
-    .card-front .navy-strip img { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 108px; height: auto; }
-    .card-front .teal-anchor { position: absolute; left: 140px; top: 50%; transform: translateY(-50%); width: 10px; height: 72px; background: var(--teal-bright); }
-    .card-front .info { position: absolute; left: 168px; top: 50%; transform: translateY(-50%); right: 22px; }
-    .card-front .name { font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 22px; color: var(--navy); letter-spacing: 0.3px; line-height: 1.1; }
-    .card-front .title { font-family: 'Barlow Condensed', sans-serif; font-weight: 500; font-size: 13px; color: var(--slate); letter-spacing: 0.4px; margin-top: 5px; margin-bottom: 13px; }
-    .card-front .contact { line-height: 1.85; font-size: 10.5px; color: var(--slate); }
-    .card-front .contact-row { display: flex; align-items: center; gap: 8px; }
-    .card-front .contact-row img { width: 11px; height: 11px; }
-    .card-back { background: var(--navy); position: relative; }
-    .card-back .imago { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -68%); width: 70px; height: 70px; }
-    .card-back .web { position: absolute; top: 50%; left: 50%; transform: translate(-50%, 28px); font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 12px; color: var(--copper); letter-spacing: 2.2px; text-transform: uppercase; white-space: nowrap; }
-    .card-back .qr-wrap { position: absolute; bottom: 14px; right: 14px; background: white; padding: 4px; }
-    .card-back .qr-wrap img { width: 56px; height: 56px; display: block; }
-    .card-back .qr-label { position: absolute; bottom: 18px; left: 18px; font-family: 'Barlow Condensed', sans-serif; font-weight: 400; font-size: 9px; letter-spacing: 0.5px; color: rgba(255,255,255,0.65); max-width: 140px; line-height: 1.4; }
+    /* CARD: 90×50mm → 360×200 px */
+    .card { width: 360px; height: 200px; background: white; box-shadow: 0 2px 12px rgba(10,46,92,0.12); position: relative; overflow: hidden; font-family: 'Open Sans Brand', sans-serif; }
+    /* CARA A — MARCA: navy, wordmark blanco centrado + glifo imago como marca de agua 8%. */
+    .card-front { background: var(--navy); }
+    .card-front .ca-wm { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 208px; height: auto; opacity: 0.08; }
+    .card-front .ca-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 176px; height: auto; }
+    /* CARA B — INFO (grid 2×2): contacto TL · wordmark TR · nombre+cargo BL · QR BR. */
+    .card-back { background: #fff; position: relative; }
+    .card-back .cb-contact { position: absolute; top: 18px; left: 20px; display: flex; flex-direction: column; gap: 6px; }
+    .card-back .cb-contact .crow { display: flex; align-items: center; gap: 6px; }
+    .card-back .cb-contact .crow img { width: 11px; height: 11px; }
+    .card-back .cb-contact .crow span { font-family: 'Open Sans Brand', sans-serif; font-size: 9px; color: var(--slate); white-space: nowrap; }
+    .card-back .cb-wordmark { position: absolute; top: 22px; right: 20px; width: 92px; height: auto; }
+    .card-back .cb-id { position: absolute; left: 20px; bottom: 18px; }
+    .card-back .cb-id .cb-name { font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 25px; color: var(--navy); line-height: 1.0; letter-spacing: 0.3px; }
+    .card-back .cb-id .cb-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 500; font-size: 11px; color: var(--slate); letter-spacing: 2.5px; text-transform: uppercase; margin-top: 5px; }
+    .card-back .cb-qr { position: absolute; right: 20px; bottom: 18px; background: #fff; padding: 8px; line-height: 0; }
+    .card-back .cb-qr img { width: 72px; height: 72px; display: block; }
 
     /* BADGE: 54×85.6mm portrait CR80 → 216×342 px (1mm=4px) */
     .badge { width: 216px; height: 342px; background: white; box-shadow: 0 2px 12px rgba(10,46,92,0.12); position: relative; overflow: hidden; font-family: 'Open Sans Brand', sans-serif; }
@@ -80,24 +81,20 @@
       width: 40px; height: 12px; background: rgba(255,255,255,0.95); border: 1px dashed rgba(150,150,150,0.7); border-radius: 6px; z-index: 10;
     }
     .badge-back::before { background: rgba(10,46,92,0.85); border-color: rgba(255,255,255,0.45); }
-    .badge-front .header { background: var(--navy); height: 56px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 8px; }
-    .badge-front .header img { width: 118px; }
-    .badge-front .photo-area { padding: 18px 16px 4px; display: flex; justify-content: center; }
-    .badge-front .photo-frame { width: 120px; height: 160px; background: var(--mist); display: flex; align-items: center; justify-content: center; color: var(--slate-light); overflow: hidden; }
-    .badge-front .photo-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .badge-front .photo-frame .placeholder-imago { width: 70%; height: 70%; object-fit: contain; }
-    .badge-front .teal-anchor-h { width: 60px; height: 4px; background: var(--teal-bright); margin: 12px auto 12px; }
-    .badge-front .name-block { text-align: center; padding: 0 12px; }
-    .badge-front .name-block .name { font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 18px; color: var(--navy); line-height: 1.1; letter-spacing: 0.3px; }
-    .badge-front .name-block .title { font-family: 'Barlow Condensed', sans-serif; font-weight: 500; font-size: 11px; color: var(--slate); letter-spacing: 0.4px; margin-top: 5px; }
-    .badge-front .footer { position: absolute; bottom: 0; left: 0; right: 0; background: var(--navy); height: 32px; display: flex; align-items: center; justify-content: center; color: var(--copper); font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 10px; letter-spacing: 2px; }
+    /* BADGE FRONT — logo (arriba) · foto (enmedio) · QR (abajo-izq) · web+correo (abajo-der). */
+    .badge-front { background: white; }
+    .badge-front .gf-logo { position: absolute; top: 48px; left: 50%; transform: translateX(-50%); width: 112px; height: auto; }
+    .badge-front .gf-photo { position: absolute; top: 85px; left: 50%; transform: translateX(-50%); width: 104px; height: 128px; background: var(--mist); border: 3px solid var(--teal-bright); border-radius: 8px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .badge-front .gf-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .badge-front .gf-name { position: absolute; top: 222px; left: 8px; right: 8px; text-align: center; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 17px; color: var(--navy); line-height: 1.05; letter-spacing: 0.3px; }
+    .badge-front .gf-qr { position: absolute; left: 16px; bottom: 16px; background: #fff; padding: 8px; line-height: 0; }
+    .badge-front .gf-qr img { width: 60px; height: 60px; display: block; }
+    .badge-front .gf-contact { position: absolute; left: 106px; right: 14px; bottom: 16px; height: 80px; display: flex; flex-direction: column; justify-content: center; gap: 5px; }
+    .badge-front .gf-contact div { font-family: 'Open Sans Brand', sans-serif; font-size: 7px; color: var(--slate); white-space: nowrap; }
+    /* BADGE BACK — solo logo: navy + glifo marca de agua + wordmark blanco centrado. */
     .badge-back { background: var(--navy); }
-    .badge-back .b-imago { position: absolute; top: 56px; left: 50%; transform: translateX(-50%); width: 56px; height: 56px; }
-    .badge-back .b-name { position: absolute; top: 124px; left: 0; right: 0; text-align: center; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 14px; color: white; letter-spacing: 0.3px; }
-    .badge-back .b-rule { position: absolute; top: 152px; left: 50%; transform: translateX(-50%); width: 56px; height: 2.5px; background: var(--teal-bright); }
-    .badge-back .b-qr { position: absolute; top: 170px; left: 50%; transform: translateX(-50%); background: white; padding: 6px; }
-    .badge-back .b-qr img { width: 110px; height: 110px; display: block; }
-    .badge-back .b-instruction { position: absolute; bottom: 22px; left: 16px; right: 16px; text-align: center; font-family: 'Barlow Condensed', sans-serif; font-weight: 400; font-size: 9px; color: rgba(255,255,255,0.7); letter-spacing: 0.4px; line-height: 1.4; }
+    .badge-back .gb-wm { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 168px; height: auto; opacity: 0.08; }
+    .badge-back .gb-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 144px; height: auto; }
 
     .actions { display: flex; gap: 10px; }
     .btn { flex: 1; padding: 14px 18px; border: none; cursor: pointer; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 12px; letter-spacing: 1.2px; text-transform: uppercase; }
@@ -111,9 +108,11 @@
     /* SCREEN card preview (phone display): vertical navy, 74×132mm → 240×428px */
     .screen-pair { display: flex; gap: 32px; flex-wrap: wrap; align-items: flex-start; }
     .screen-card { width: 240px; height: 428px; background: var(--navy); box-shadow: 0 2px 12px rgba(10,46,92,0.12); position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; padding: 22px 18px 14px; font-family: 'Open Sans Brand', sans-serif; }
+    .screen-card .sc-wm { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 168px; height: auto; opacity: 0.08; }
+    .screen-card > *:not(.sc-wm) { position: relative; z-index: 1; }
     .screen-card .sc-imago { width: 58px; height: 58px; margin-top: 2px; }
     .screen-card .sc-name { font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 20px; color: white; text-align: center; line-height: 1.1; margin-top: 12px; }
-    .screen-card .sc-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 500; font-size: 12px; color: var(--slate-light); text-align: center; margin-top: 5px; }
+    .screen-card .sc-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 500; font-size: 12px; color: var(--slate-light); text-align: center; letter-spacing: 2.2px; text-transform: uppercase; margin-top: 5px; }
     .screen-card .sc-accent { width: 58px; height: 2px; background: var(--teal-bright); margin: 11px 0; }
     .screen-card .sc-qr { background: white; padding: 7px; }
     .screen-card .sc-qr img { width: 112px; height: 112px; display: block; }
@@ -231,24 +230,22 @@
 
       <div id="view-card" class="card-pair">
         <div class="preview-wrap">
-          <div class="label" data-es="FRENTE" data-en="FRONT">FRENTE</div>
+          <div class="label" data-es="CARA A · MARCA" data-en="SIDE A · BRAND">CARA A · MARCA</div>
           <div class="card card-front">
-            <div class="navy-strip"><img src="./assets/logo_white.png" alt="Aditum Consulting"></div>
-            <div class="teal-anchor"></div>
-            <div class="info">
-              <div class="name" id="cf-name">María González</div>
-              <div class="title" id="cf-title">Analista de Negocios</div>
-              <div class="contact" id="cf-contact"></div>
-            </div>
+            <img class="ca-wm" src="./assets/imago.png" alt="">
+            <img class="ca-logo" src="./assets/logo_white.png" alt="Aditum Consulting">
           </div>
         </div>
         <div class="preview-wrap">
-          <div class="label" data-es="REVERSO" data-en="BACK">REVERSO</div>
+          <div class="label" data-es="CARA B · INFO" data-en="SIDE B · INFO">CARA B · INFO</div>
           <div class="card card-back">
-            <img class="imago" src="./assets/imago.png" alt="Aditum">
-            <div class="web">www.aditumconsulting.com</div>
-            <div class="qr-label" id="cb-qr-label">Escanea para añadir contacto</div>
-            <div class="qr-wrap"><img id="cb-qr-img" alt="QR"></div>
+            <div class="cb-contact" id="cb-contact"></div>
+            <img class="cb-wordmark" src="./assets/logo.png" alt="Aditum Consulting">
+            <div class="cb-id">
+              <div class="cb-name" id="cf-name">María González</div>
+              <div class="cb-title" id="cf-title">Analista de Negocios</div>
+            </div>
+            <div class="cb-qr"><img id="cb-qr-img" alt="QR"></div>
           </div>
         </div>
       </div>
@@ -257,26 +254,21 @@
         <div class="preview-wrap">
           <div class="label" data-es="GAFETE FRENTE" data-en="BADGE FRONT">GAFETE FRENTE</div>
           <div class="badge badge-front">
-            <div class="header"><img src="./assets/logo_white.png" alt="Aditum Consulting"></div>
-            <div class="photo-area">
-              <div class="photo-frame" id="bf-photo-frame"></div>
+            <img class="gf-logo" src="./assets/logo.png" alt="Aditum Consulting">
+            <div class="gf-photo" id="bf-photo-frame"></div>
+            <div class="gf-name" id="gf-name">María González</div>
+            <div class="gf-qr"><img id="bb-qr-img" alt="QR"></div>
+            <div class="gf-contact">
+              <div>www.aditumconsulting.com</div>
+              <div>info@aditumconsulting.com</div>
             </div>
-            <div class="teal-anchor-h"></div>
-            <div class="name-block">
-              <div class="name" id="bf-name">María González</div>
-              <div class="title" id="bf-title">Analista de Negocios</div>
-            </div>
-            <div class="footer">WWW.ADITUMCONSULTING.COM</div>
           </div>
         </div>
         <div class="preview-wrap">
-          <div class="label" data-es="GAFETE REVERSO" data-en="BADGE BACK">GAFETE REVERSO</div>
+          <div class="label" data-es="GAFETE DORSO" data-en="BADGE BACK">GAFETE DORSO</div>
           <div class="badge badge-back">
-            <img class="b-imago" src="./assets/imago.png" alt="Aditum">
-            <div class="b-name" id="bb-name">María González</div>
-            <div class="b-rule"></div>
-            <div class="b-qr"><img id="bb-qr-img" alt="QR"></div>
-            <div class="b-instruction" id="bb-instruction">Escanea para añadir contacto</div>
+            <img class="gb-wm" src="./assets/imago.png" alt="">
+            <img class="gb-logo" src="./assets/logo_white.png" alt="Aditum Consulting">
           </div>
         </div>
       </div>
@@ -285,6 +277,7 @@
         <div class="preview-wrap">
           <div class="label" data-es="PANTALLA · CELULAR" data-en="SCREEN · PHONE">PANTALLA · CELULAR</div>
           <div class="screen-card">
+            <img class="sc-wm" src="./assets/imago.png" alt="">
             <img class="sc-imago" src="./assets/imago.png" alt="Aditum">
             <div class="sc-name" id="sc-name">María González</div>
             <div class="sc-title" id="sc-title">Analista de Negocios</div>
@@ -327,7 +320,7 @@
     const CONFIG = { WEBSITE: 'www.aditumconsulting.com', WEBSITE_URL: 'https://www.aditumconsulting.com' };
     const MM = 2.83464566929;
     const SPEC = {
-      card:  { trim_w: 90, trim_h: 55,   bleed: 3, page_w: 96, page_h: 61 },
+      card:  { trim_w: 90, trim_h: 50,   bleed: 3, page_w: 96, page_h: 56 },
       badge: { trim_w: 54, trim_h: 85.6, bleed: 3, page_w: 60, page_h: 91.6 },
       // "screen" is a phone-display card: portrait, no bleed, no crop marks.
       // Sized at a phone-friendly aspect (≈9:16). Units still in mm for consistency
@@ -400,13 +393,14 @@
         ];
       } else if (isCard) {
         items = [
-          ['Trim final', '90 × 55 mm'],
+          ['Trim final', '90 × 50 mm'],
           ['Sangrado', '3 mm cada lado'],
-          ['Canvas total', '96 × 61 mm'],
+          ['Canvas total', '96 × 56 mm'],
           ['Resolución', '300 DPI'],
+          [currentLang === 'es' ? 'Caras' : 'Faces', currentLang === 'es' ? 'A marca · B info' : 'A brand · B info'],
           ['Marcas de corte', currentLang === 'es' ? 'incluidas, 4 esquinas' : 'included, 4 corners'],
           ['Espacio de color', 'RGB (sRGB)'],
-          [currentLang === 'es' ? 'Páginas' : 'Pages', currentLang === 'es' ? '2 (frente y reverso)' : '2 (front and back)']
+          [currentLang === 'es' ? 'Páginas' : 'Pages', currentLang === 'es' ? '2 (A marca / B info)' : '2 (A brand / B info)']
         ];
       } else {
         items = [
@@ -541,34 +535,52 @@
       render();
     }
 
+    // Shrink a preview text element's font until it fits maxPx on one line
+    // (mirrors the PDF's fitTextSize so long names don't overflow into other zones).
+    function fitEl(el, maxPx, startPx, minPx) {
+      if (!el) return;
+      el.style.whiteSpace = 'nowrap';
+      let s = startPx; el.style.fontSize = s + 'px';
+      while (s > minPx && el.scrollWidth > maxPx) { s -= 0.5; el.style.fontSize = s + 'px'; }
+    }
+
     function render() {
       const data = gatherData();
       document.getElementById('cf-name').textContent = data.name || '\u00A0';
       document.getElementById('cf-title').textContent = data.title || '\u00A0';
-      const contactDiv = document.getElementById('cf-contact');
-      contactDiv.innerHTML = '';
-      function row(icon, text) {
+      // Cara B \u00B7 nombre h\u00E9roe + cargo: ajustar a su cuadrante (no invadir el QR).
+      fitEl(document.getElementById('cf-name'), 215, 25, 13);
+      fitEl(document.getElementById('cf-title'), 215, 11, 7);
+      // Cara B \u00B7 contacto con micro-iconos (uniforme, sin bold), dentro de la columna izquierda.
+      const cbContact = document.getElementById('cb-contact');
+      function crow(icon, text) {
         if (!text) return '';
-        return '<div class="contact-row"><img src="./assets/icon-' + icon + '.png" alt=""><span>' + escapeHTML(text) + '</span></div>';
+        return '<div class="crow"><img src="./assets/icon-' + icon + '.png" alt=""><span>' + escapeHTML(text) + '</span></div>';
       }
-      contactDiv.innerHTML =
-        row('mobile', data.mobile1) +
-        row('mobile', data.mobile2) +
-        row('phone',  data.office) +
-        row('mail',   data.email) +
-        row('web',    CONFIG.WEBSITE);
-
-      document.getElementById('bf-name').textContent = data.name || '\u00A0';
-      document.getElementById('bf-title').textContent = data.title || '\u00A0';
-      document.getElementById('bb-name').textContent = data.name || '\u00A0';
+      cbContact.innerHTML =
+        crow('mobile', data.mobile1) +
+        crow('mobile', data.mobile2) +
+        crow('phone',  data.office) +
+        crow('mail',   data.email) +
+        crow('web',    CONFIG.WEBSITE);
+      // Shrink long values (email) so they stay inside the left column.
+      cbContact.querySelectorAll('.crow span').forEach(sp => {
+        let s = 9; sp.style.fontSize = s + 'px';
+        while (s > 6 && sp.scrollWidth > 200) { s -= 0.25; sp.style.fontSize = s + 'px'; }
+      });
 
       document.getElementById('sc-name').textContent = data.name || '\u00A0';
       document.getElementById('sc-title').textContent = data.title || '\u00A0';
+      fitEl(document.getElementById('sc-name'), 204, 20, 12);
+      fitEl(document.getElementById('sc-title'), 204, 12, 8);
       const scContact = document.getElementById('sc-contact');
       scContact.innerHTML = '';
       [data.mobile1, data.email].filter(Boolean).forEach(t => {
         const d = document.createElement('div'); d.textContent = t; scContact.appendChild(d);
       });
+
+      document.getElementById('gf-name').textContent = data.name || ' ';
+      fitEl(document.getElementById('gf-name'), 200, 17, 9);
 
       const frame = document.getElementById('bf-photo-frame');
       frame.innerHTML = '';
@@ -576,12 +588,8 @@
         const im = document.createElement('img');
         im.src = photoDataUrl;
         frame.appendChild(im);
-      } else {
-        const im = document.createElement('img');
-        im.src = './assets/imago.png';
-        im.className = 'placeholder-imago';
-        frame.appendChild(im);
       }
+      // No photo: leave the slot translucent so the imago behind shows through.
 
       try {
         const qr = generateQR(data);
@@ -590,8 +598,6 @@
         document.getElementById('bb-qr-img').src = dataUrl;
         document.getElementById('sc-qr-img').src = dataUrl;
       } catch (e) { console.error(e); }
-      document.getElementById('cb-qr-label').textContent = QR_LABEL[currentLang];
-      document.getElementById('bb-instruction').textContent = QR_LABEL[currentLang];
       document.getElementById('sc-scan').textContent = QR_LABEL[currentLang];
     }
 
@@ -647,6 +653,24 @@
       page.drawLine({ start: { x: slotX, y: slotY + slotH }, end: { x: slotX + slotW, y: slotY + slotH }, thickness: lineW, color: lineCol });
       page.drawLine({ start: { x: slotX, y: slotY }, end: { x: slotX, y: slotY + slotH }, thickness: lineW, color: lineCol });
       page.drawLine({ start: { x: slotX + slotW, y: slotY }, end: { x: slotX + slotW, y: slotY + slotH }, thickness: lineW, color: lineCol });
+    }
+
+    // Rounded-rectangle path operators (PDF coords, y-up) for clipping/filling.
+    function roundRectPath(NS, x, y, w, h, r) {
+      const { moveTo, lineTo, appendBezierCurve, closePath } = NS;
+      const k = r * 0.5523;
+      return [
+        moveTo(x + r, y),
+        lineTo(x + w - r, y),
+        appendBezierCurve(x + w - r + k, y, x + w, y + r - k, x + w, y + r),
+        lineTo(x + w, y + h - r),
+        appendBezierCurve(x + w, y + h - r + k, x + w - r + k, y + h, x + w - r, y + h),
+        lineTo(x + r, y + h),
+        appendBezierCurve(x + r - k, y + h, x, y + h - r + k, x, y + h - r),
+        lineTo(x, y + r),
+        appendBezierCurve(x, y + r - k, x + r - k, y, x + r, y),
+        closePath(),
+      ];
     }
 
     async function loadCommon(pdf) {
@@ -725,177 +749,93 @@
       const bleed = spec.bleed * MM;
 
       // ============================================================
-      // FRONT — "Imago as visual anchor"
-      // Large imago anchors left side. Name and contact data right.
-      // The gradient of the imago IS the brand statement.
+      // Tarjeta · 2 caras de función separada (spec Aditum):
+      //   CARA A = marca · CARA B = información (grid 2×2 por cuadrantes).
+      // Trim 90×50mm, 3mm bleed → página 96×56mm. Margen seguro 5mm.
       // ============================================================
-      const front = pdf.addPage([pageW, pageH]);
-      // Implicit white background.
+      const trimRightX = pageW - bleed;
+      const trimTopY = pageH - bleed, trimBottomY = bleed;
+      const safe = 5 * MM;
+      const safeLeftX = bleed + safe, safeRightX = trimRightX - safe;
+      const safeTopY = trimTopY - safe, safeBottomY = trimBottomY + safe;
 
-      const safeMarginX = bleed + 5 * MM;
-      const safeMarginY = bleed + 5 * MM;
-      const trimTopY = pageH - bleed;
-      const trimBottomY = bleed;
+      // Lockup a color (imago + wordmark) para el wordmark navy de la cara de info.
+      const logoColorBytes = await fetchBytes('./assets/logo_print_color.png');
+      const logoColor = await pdf.embedPng(logoColorBytes);
 
-      // === IMAGO — large visual anchor, contained within trim ===
-      // 34mm tall, sized so content column has comfortable width for long emails.
-      // Vertically centered relative to trim.
-      const imagoSize = 32 * MM;
-      const imagoX = bleed + 3 * MM;
-      const trimCenterY = (trimTopY + trimBottomY) / 2;
-      const imagoY = trimCenterY - imagoSize / 2;
-      front.drawImage(ast.imago, {
-        x: imagoX, y: imagoY,
-        width: imagoSize, height: imagoSize
-      });
+      // ---------- CARA A — MARCA ----------
+      // Navy sólido + glifo imago como marca de agua (~8%) + wordmark blanco centrado. Sin texto.
+      const caraA = pdf.addPage([pageW, pageH]);
+      caraA.drawRectangle({ x: 0, y: 0, width: pageW, height: pageH, color: NAVY });
+      const wmSize = 52 * MM;
+      caraA.drawImage(ast.imago, { x: (pageW - wmSize) / 2, y: (pageH - wmSize) / 2, width: wmSize, height: wmSize, opacity: 0.08 });
+      const aLogoW = 44 * MM;
+      const aLogoH = aLogoW / (ast.logo.width / ast.logo.height);
+      caraA.drawImage(ast.logo, { x: (pageW - aLogoW) / 2, y: (pageH - aLogoH) / 2, width: aLogoW, height: aLogoH });
+      drawCropMarks(caraA, pageW, pageH, bleed, PDFLib);
 
-      // Content column
-      const contentX = imagoX + imagoSize + 4 * MM;
-      const contentRightX = pageW - bleed - 3.5 * MM;
-      const contentW = contentRightX - contentX;
-      // Visual horizontal center of the content column for alignment with imago center
-      const contentCenterX = (contentX + contentRightX) / 2;
+      // ---------- CARA B — INFORMACIÓN (grid 2×2) ----------
+      const caraB = pdf.addPage([pageW, pageH]);
+      // Fondo blanco (default).
 
-      // === BUILD CONTACT ROWS (only filled fields) ===
-      const rows = [];
-      if (data.mobile1) rows.push({ label: 'M.', text: data.mobile1 });
-      if (data.mobile2) rows.push({ label: 'M.', text: data.mobile2 });
-      if (data.office)  rows.push({ label: 'T.', text: data.office });
-      if (data.email)   rows.push({ label: 'E.', text: data.email });
-      rows.push({ label: 'W.', text: CONFIG.WEBSITE });
-
-      // === TYPOGRAPHIC SPEC ===
-      // Name auto-shrinks to fit the content column (handles long compound names).
-      const name = data.name || '';
-      const nameSize = fitTextSize(name, ast.fonts.barlowSemi, 16, contentW, 10);
-      const titleSize = fitTextSize(data.title || '', ast.fonts.barlowMed, 9, contentW, 6.5);
-      const contactSize = 7.2;
-      const labelSize = 6.5;
-      const nameToTitleGap = 5.5 * MM;
-      const titleToAccentGap = 3.5 * MM;
-      const accentH = 1.2;                // 1.2 pt
-      const accentToContactGap = 3.8 * MM;
-      const contactLineH = 3.3 * MM;
-      const labelColW = 4 * MM;
-
-      // === COMPUTE TOTAL BLOCK HEIGHT (all in PDF points) ===
-      // The block visual extent: from TOP of name → BOTTOM of last contact row's descenders.
-      //   topOfName  → baselineOfName: nameSize * 0.72 (cap height)
-      //   baselineOfName → baselineOfTitle: nameToTitleGap
-      //   baselineOfTitle → topOfAccent:  titleToAccentGap
-      //   topOfAccent → bottomOfAccent: accentH
-      //   bottomOfAccent → baselineOfFirstContact: accentToContactGap
-      //   between contact baselines: contactLineH (n-1 times)
-      //   baselineOfLastContact → bottomOfLastContact (descender): contactSize * 0.22
-      const nameCapH = nameSize * 0.72;
-      const contactDescenderH = contactSize * 0.22;
-      const totalH =
-        nameCapH
-        + nameToTitleGap
-        + titleToAccentGap
-        + accentH
-        + accentToContactGap
-        + (rows.length - 1) * contactLineH
-        + contactDescenderH;
-
-      // Center block vertically against imago's VISUAL center (not the PNG bounding box).
-      // The imago PNG has transparent margin (top ~6.8% and bottom ~6.9% are empty pixels).
-      // Visual extent in the rendered imago: imagoY + 0.068*imagoSize to imagoY + 0.931*imagoSize.
-      // Visual center: midpoint of those bounds.
-      const imagoVisualCenterY = imagoY + imagoSize * (0.068 + 0.931) / 2;
-      const topOfNameY = imagoVisualCenterY + totalH / 2;
-      const nameY = topOfNameY - nameCapH;
-      // === NAME — left-aligned at contentX ===
-      front.drawText(name, {
-        x: contentX, y: nameY,
-        size: nameSize, font: ast.fonts.barlowSemi, color: NAVY
-      });
-
-      // === TITLE — left-aligned ===
-      const titleY = nameY - nameToTitleGap;
-      front.drawText(data.title || '', {
-        x: contentX, y: titleY,
-        size: titleSize, font: ast.fonts.barlowMed, color: SLATE
-      });
-
-      // === TEAL ACCENT — left-aligned (anchored at contentX) ===
-      const accentY = titleY - titleToAccentGap;
-      front.drawRectangle({
-        x: contentX, y: accentY,
-        width: 14 * MM, height: accentH,
-        color: TEAL_BRIGHT
-      });
-
-      // === CONTACT ROWS — left-aligned, labels in fixed column ===
-      // Each row's text auto-shrinks if needed (e.g. very long email addresses).
-      const contactTextMaxW = contentRightX - (contentX + labelColW);
-      let cy = accentY - accentToContactGap;
-      for (const r of rows) {
-        front.drawText(r.label, {
-          x: contentX, y: cy,
-          size: labelSize, font: ast.fonts.barlowMed, color: TEAL_BRIGHT
-        });
-        const rowSize = fitTextSize(r.text, ast.fonts.openReg, contactSize, contactTextMaxW, 5.5);
-        front.drawText(r.text, {
-          x: contentX + labelColW, y: cy,
-          size: rowSize, font: ast.fonts.openReg, color: SLATE
-        });
-        cy -= contactLineH;
-      }
-
-      drawCropMarks(front, pageW, pageH, bleed, PDFLib);
-
-      // ============================================================
-      // BACK — Navy with FULL logo (imago + wordmark) and QR
-      // Logo completo blanco en parte superior. QR centrado con respiración.
-      // ============================================================
-      const back = pdf.addPage([pageW, pageH]);
-      back.drawRectangle({ x: 0, y: 0, width: pageW, height: pageH, color: NAVY });
-
-      // === FULL LOGO (imago + ADITUM CONSULTING wordmark) in white reverse ===
-      // Uses the logo_print_white asset which has imago gradient preserved + wordmark in white.
-      const bLogoMaxW = 50 * MM;  // generous, gives it presence on the back
-      const bLogoAspect = ast.logo.width / ast.logo.height;
-      const bLogoW = bLogoMaxW;
-      const bLogoH = bLogoW / bLogoAspect;
-      const bLogoX = (pageW - bLogoW) / 2;
-      const bLogoY = pageH - bleed - 7 * MM - bLogoH;
-      back.drawImage(ast.logo, { x: bLogoX, y: bLogoY, width: bLogoW, height: bLogoH });
-
-      // === QR centered, with generous spacing from logo above ===
+      // BR · QR navy-sobre-blanco, anclado abajo-derecha con placa + quiet-zone.
       const qrSize = 18 * MM;
-      const qrPad = 1.5 * MM;
-      const qrX = (pageW - qrSize) / 2;
-      // Place QR centered between logo bottom and web text top with comfortable padding
-      const qrY = bLogoY - 5 * MM - qrSize;
-      back.drawRectangle({
-        x: qrX - qrPad, y: qrY - qrPad,
-        width: qrSize + 2 * qrPad, height: qrSize + 2 * qrPad,
-        color: WHITE
-      });
+      const qrQuiet = 2.6 * MM;
+      const plateSize = qrSize + 2 * qrQuiet;
+      const plateX = safeRightX - plateSize;
+      const plateY = safeBottomY;
+      caraB.drawRectangle({ x: plateX, y: plateY, width: plateSize, height: plateSize, color: WHITE });
       const qr = generateQR(data);
       const matrix = qrModuleMatrix(qr);
       const mc = matrix.length;
       const ms = qrSize / mc;
+      const qrX = plateX + qrQuiet, qrY = plateY + qrQuiet;
       for (let r = 0; r < mc; r++) for (let c = 0; c < mc; c++) {
-        if (matrix[r][c]) back.drawRectangle({ x: qrX + c*ms, y: qrY + (mc-1-r)*ms, width: ms, height: ms, color: NAVY });
+        if (matrix[r][c]) caraB.drawRectangle({ x: qrX + c*ms, y: qrY + (mc-1-r)*ms, width: ms, height: ms, color: NAVY });
       }
 
-      // === Web URL in copper at bottom, letterspaced ===
-      const webText = CONFIG.WEBSITE.toUpperCase();
-      const webSize = 7;
-      const letterSpace = 1.0;
-      let webWidth = 0;
-      for (const ch of webText) webWidth += ast.fonts.barlowSemi.widthOfTextAtSize(ch, webSize) + letterSpace;
-      webWidth -= letterSpace;
-      let wx = (pageW - webWidth) / 2;
-      const wy = trimBottomY + 4.5 * MM;
-      for (const ch of webText) {
-        back.drawText(ch, { x: wx, y: wy, size: webSize, font: ast.fonts.barlowSemi, color: COPPER });
-        wx += ast.fonts.barlowSemi.widthOfTextAtSize(ch, webSize) + letterSpace;
+      // TR · wordmark navy, mismo ancho y borde derecho que el QR (columna derecha alineada).
+      const trLogoW = plateSize;
+      const trLogoH = trLogoW / (logoColor.width / logoColor.height);
+      caraB.drawImage(logoColor, { x: safeRightX - trLogoW, y: safeTopY - trLogoH, width: trLogoW, height: trLogoH });
+
+      // BL · nombre (héroe) + cargo (versalitas con tracking), anclado abajo-izquierda.
+      const name = data.name || '';
+      const titleUp = (data.title || '').toUpperCase();
+      const blMaxW = (plateX - 4 * MM) - safeLeftX;
+      const nameSize = fitTextSize(name, ast.fonts.barlowSemi, 18, blMaxW, 11);
+      const titleSize = fitTextSize(titleUp, ast.fonts.barlowMed, 8, blMaxW, 6);
+      const titleBaseY = safeBottomY + 1 * MM;
+      const nameBaseY = titleBaseY + titleSize * 0.72 + 3 * MM;
+      caraB.drawText(name, { x: safeLeftX, y: nameBaseY, size: nameSize, font: ast.fonts.barlowSemi, color: NAVY });
+      const tLS = 1.4;
+      let tcx = safeLeftX;
+      for (const ch of titleUp) {
+        caraB.drawText(ch, { x: tcx, y: titleBaseY, size: titleSize, font: ast.fonts.barlowMed, color: SLATE });
+        tcx += ast.fonts.barlowMed.widthOfTextAtSize(ch, titleSize) + tLS;
       }
 
-      drawCropMarks(back, pageW, pageH, bleed, PDFLib);
+      // TL · contacto con micro-iconos, anclado arriba-izquierda.
+      // Sin bold; texto contenido en la columna izquierda (no cruza al QR/logo).
+      const rows = [];
+      if (data.mobile1) rows.push({ icon: ast.icons.mobile, text: data.mobile1 });
+      if (data.mobile2) rows.push({ icon: ast.icons.mobile, text: data.mobile2 });
+      if (data.office)  rows.push({ icon: ast.icons.phone,  text: data.office });
+      if (data.email)   rows.push({ icon: ast.icons.mail,   text: data.email });
+      rows.push({ icon: ast.icons.web, text: CONFIG.WEBSITE });
+      const icoSize = 2.6 * MM;
+      const cLineH = 3.8 * MM;
+      const cTextX = safeLeftX + icoSize + 1.8 * MM;
+      const cTextMaxW = (plateX - 4 * MM) - cTextX;   // columna izquierda; el email se ajusta sin cruzar
+      let cby = safeTopY - icoSize;
+      for (const r of rows) {
+        caraB.drawImage(r.icon, { x: safeLeftX, y: cby, width: icoSize, height: icoSize });
+        const s = fitTextSize(r.text, ast.fonts.openReg, 7, cTextMaxW, 5.5);
+        caraB.drawText(r.text, { x: cTextX, y: cby + icoSize * 0.2, size: s, font: ast.fonts.openReg, color: SLATE });
+        cby -= cLineH;
+      }
+
+      drawCropMarks(caraB, pageW, pageH, bleed, PDFLib);
       await savePDF(pdf, data, 'tarjeta');
     }
 
@@ -913,6 +853,7 @@
       const TEAL_BRIGHT = rgb(42/255, 139/255, 159/255);
       const COPPER = rgb(184/255, 112/255, 74/255);
       const SLATE = rgb(90/255, 107/255, 125/255);
+      const SLATE_LIGHT = rgb(136/255, 149/255, 164/255);
       const MIST = rgb(232/255, 240/255, 242/255);
       const WHITE = rgb(1, 1, 1);
 
@@ -925,148 +866,108 @@
       if (photoDataUrl) photoImg = await pdf.embedJpg(dataUrlToUint8(photoDataUrl));
 
       // ============================================================
-      // FRONT — "Quiet Confidence"
-      // Photo dominates upper half. Oversized name below.
-      // Tiny logo in footer. Single teal accent line. White background.
+      // FRONT — logo (arriba) · foto (enmedio) · QR (abajo-izq) · web+correo (abajo-der).
       // ============================================================
       const front = pdf.addPage([pageW, pageH]);
       // White background (default).
-
-      // Also load color logo for use on white
-      const logoColorBytesB = await fetchBytes('./assets/logo_print_color.png');
-      const logoColor = await pdf.embedPng(logoColorBytesB);
-
       const trimTopY = pageH - bleed;
       const trimBottomY = bleed;
+      const trimRightX = pageW - bleed;
+      const safe = 4 * MM;
+      const safeLeftX = bleed + safe;
+      const safeRightX = trimRightX - safe;
+      const safeBottomY = trimBottomY + safe;
 
-      // === PHOTO — dominant element, top portion of card ===
-      // Big photo, 38mm wide × 50.66mm tall (3:4), starts below lanyard zone (~9mm from top).
-      // Top of photo: 9mm below trim top edge (clear of lanyard).
-      const photoW = 38 * MM;
-      const photoH = photoW * 4 / 3;       // ~50.66mm
+      // Color lockup (imago + wordmark) para el frente blanco.
+      const logoColorBytes = await fetchBytes('./assets/logo_print_color.png');
+      const logoColor = await pdf.embedPng(logoColorBytes);
+
+      // --- LOGO arriba (centrado, debajo de la zona del lanyard) ---
+      const fLogoW = 28 * MM;
+      const fLogoH = fLogoW / (logoColor.width / logoColor.height);
+      const fLogoTopY = trimTopY - 12 * MM;   // lower, to clear the lanyard slot
+      front.drawImage(logoColor, { x: (pageW - fLogoW) / 2, y: fLogoTopY - fLogoH, width: fLogoW, height: fLogoH });
+
+      // --- Fila inferior: QR (izq) + contacto (der), anclada al margen seguro inferior ---
+      const qrSize = 15 * MM;
+      const qrQuiet = 2.2 * MM;
+      const plateSize = qrSize + 2 * qrQuiet;
+      const plateX = safeLeftX;
+      const plateY = safeBottomY;
+
+      // --- FOTO enmedio (entre el logo y el nombre), con borde teal y esquinas redondeadas ---
+      const photoW = 26 * MM;
+      const photoH = 32 * MM;
       const photoX = (pageW - photoW) / 2;
-      const photoTopY = trimTopY - 9 * MM;
+      const photoTopY = (fLogoTopY - fLogoH) - 4 * MM;
       const photoY = photoTopY - photoH;
+      const photoBw = 1 * MM;
+      const photoR = 2 * MM;   // small corner radius
+      // Teal rounded frame (filled).
+      front.pushOperators(
+        PDFLib.pushGraphicsState(),
+        PDFLib.setFillingColor(TEAL_BRIGHT),
+        ...roundRectPath(PDFLib, photoX - photoBw, photoY - photoBw, photoW + 2*photoBw, photoH + 2*photoBw, photoR + photoBw),
+        PDFLib.fill(),
+        PDFLib.popGraphicsState()
+      );
+      // Photo (or mist) clipped to the rounded rect.
+      front.pushOperators(
+        PDFLib.pushGraphicsState(),
+        ...roundRectPath(PDFLib, photoX, photoY, photoW, photoH, photoR),
+        PDFLib.clip(),
+        PDFLib.endPath()
+      );
       if (photoImg) {
         front.drawImage(photoImg, { x: photoX, y: photoY, width: photoW, height: photoH });
       } else {
-        // Fallback: mist background with imago
         front.drawRectangle({ x: photoX, y: photoY, width: photoW, height: photoH, color: MIST });
-        const fbImago = 22 * MM;
-        front.drawImage(ast.imago, {
-          x: (pageW - fbImago) / 2,
-          y: photoY + (photoH - fbImago) / 2,
-          width: fbImago, height: fbImago
-        });
+      }
+      front.pushOperators(PDFLib.popGraphicsState());
+
+      // --- NOMBRE debajo de la foto (auto-ajuste de tamaño) ---
+      const bfName = data.name || '';
+      const bfNameMaxW = pageW - 2 * (bleed + 4 * MM);
+      const bfNameSize = fitTextSize(bfName, ast.fonts.barlowSemi, 12, bfNameMaxW, 8);
+      const bfNameW = ast.fonts.barlowSemi.widthOfTextAtSize(bfName, bfNameSize);
+      const bfNameY = photoY - 4.5 * MM;
+      front.drawText(bfName, { x: (pageW - bfNameW) / 2, y: bfNameY, size: bfNameSize, font: ast.fonts.barlowSemi, color: NAVY });
+
+      // --- QR abajo-izquierda (navy sobre el blanco del frente; quiet zone = margen) ---
+      const fqr = generateQR(data);
+      const fMatrix = qrModuleMatrix(fqr);
+      const fMc = fMatrix.length;
+      const fMs = qrSize / fMc;
+      const fqrX = plateX + qrQuiet, fqrY = plateY + qrQuiet;
+      for (let r = 0; r < fMc; r++) for (let c = 0; c < fMc; c++) {
+        if (fMatrix[r][c]) front.drawRectangle({ x: fqrX + c*fMs, y: fqrY + (fMc-1-r)*fMs, width: fMs, height: fMs, color: NAVY });
       }
 
-      // === SINGLE TEAL ACCENT below photo — the only chromatic gesture ===
-      // 16mm × 1.5pt, centered. Echoes the card's accent line.
-      const bAccentY = photoY - 4 * MM;
-      front.drawRectangle({
-        x: (pageW - 16 * MM) / 2,
-        y: bAccentY,
-        width: 16 * MM,
-        height: 1.5,
-        color: TEAL_BRIGHT
-      });
-
-      // === NAME — oversized hero, auto-shrinks to fit (handles long compound names) ===
-      const name = data.name || '';
-      const title = data.title || '';
-      // Available width: trim width minus comfortable side margins
-      const badgeNameMaxW = pageW - 2 * (bleed + 3 * MM);
-      const nameSize = fitTextSize(name, ast.fonts.barlowSemi, 15, badgeNameMaxW, 10);
-      const titleSize = fitTextSize(title, ast.fonts.barlowMed, 9, badgeNameMaxW, 6.5);
-      const nameWidth = ast.fonts.barlowSemi.widthOfTextAtSize(name, nameSize);
-      const titleWidth = ast.fonts.barlowMed.widthOfTextAtSize(title, titleSize);
-      const nameY = bAccentY - 5.5 * MM;
-      front.drawText(name, {
-        x: (pageW - nameWidth) / 2,
-        y: nameY,
-        size: nameSize, font: ast.fonts.barlowSemi, color: NAVY
-      });
-
-      // === TITLE — below name, smaller, slate ===
-      const titleY = nameY - 4.5 * MM;
-      front.drawText(title, {
-        x: (pageW - titleWidth) / 2,
-        y: titleY,
-        size: titleSize, font: ast.fonts.barlowMed, color: SLATE
-      });
-
-      // === LOGO — small, footer area ===
-      // Discreet, centered in the bottom of the safe area.
-      const bLogoW = 18 * MM;
-      const bLogoAspect = logoColor.width / logoColor.height;
-      const bLogoH = bLogoW / bLogoAspect;
-      front.drawImage(logoColor, {
-        x: (pageW - bLogoW) / 2,
-        y: trimBottomY + 4 * MM,
-        width: bLogoW, height: bLogoH
-      });
+      // --- Web + correo corporativo abajo-derecha, centrado vertical contra el QR ---
+      const fContact = [CONFIG.WEBSITE, 'info@aditumconsulting.com'];
+      const fcX = plateX + plateSize + 3 * MM;
+      const fcMaxW = safeRightX - fcX;
+      const fcLineH = 4 * MM;
+      let fcy = (plateY + plateSize / 2) + ((fContact.length - 1) * fcLineH) / 2 - 1 * MM;
+      for (const t of fContact) {
+        const s = fitTextSize(t, ast.fonts.openReg, 6.5, fcMaxW, 4.8);
+        front.drawText(t, { x: fcX, y: fcy, size: s, font: ast.fonts.openReg, color: SLATE });
+        fcy -= fcLineH;
+      }
 
       drawLanyardSlot(front, pageW, pageH, bleed, PDFLib);
       drawCropMarks(front, pageW, pageH, bleed, PDFLib);
 
       // ============================================================
-      // BACK — Navy minimal: large QR centered. Web in copper.
-      // Same minimalist ceremony as the card back.
+      // BACK — solo logo. Navy + glifo imago marca de agua + wordmark blanco centrado.
       // ============================================================
       const back = pdf.addPage([pageW, pageH]);
       back.drawRectangle({ x: 0, y: 0, width: pageW, height: pageH, color: NAVY });
-
-      // === FULL LOGO (imago + wordmark) in white reverse ===
-      // Account for lanyard slot zone at top (occupies ~7.5mm from trim top edge).
-      const bbLogoMaxW = 40 * MM;
-      const bbLogoAspect = ast.logo.width / ast.logo.height;
-      const bbLogoW = bbLogoMaxW;
-      const bbLogoH = bbLogoW / bbLogoAspect;
-      const bbLogoX = (pageW - bbLogoW) / 2;
-      const bbLogoY = pageH - bleed - 11 * MM - bbLogoH;  // 11mm clears lanyard zone
-      back.drawImage(ast.logo, { x: bbLogoX, y: bbLogoY, width: bbLogoW, height: bbLogoH });
-
-      // === Name in white below logo (auto-shrinks for long names) ===
-      const bbNameMaxW = pageW - 2 * (bleed + 3 * MM);
-      const bbNameSize = fitTextSize(name, ast.fonts.barlowSemi, 11, bbNameMaxW, 8);
-      const bbNameWidth = ast.fonts.barlowSemi.widthOfTextAtSize(name, bbNameSize);
-      const bbNameY = bbLogoY - 6 * MM;
-      back.drawText(name, {
-        x: (pageW - bbNameWidth) / 2, y: bbNameY,
-        size: bbNameSize, font: ast.fonts.barlowSemi, color: WHITE
-      });
-
-      // === QR — large, centered, with comfortable breathing room ===
-      const bQrSize = 28 * MM;
-      const bQrPad = 1.8 * MM;
-      const bQrX = (pageW - bQrSize) / 2;
-      const bQrY = bbNameY - 5 * MM - bQrSize;
-      back.drawRectangle({
-        x: bQrX - bQrPad, y: bQrY - bQrPad,
-        width: bQrSize + 2 * bQrPad, height: bQrSize + 2 * bQrPad,
-        color: WHITE
-      });
-      const bqr = generateQR(data);
-      const bMatrix = qrModuleMatrix(bqr);
-      const bMc = bMatrix.length;
-      const bMs = bQrSize / bMc;
-      for (let r = 0; r < bMc; r++) for (let c = 0; c < bMc; c++) {
-        if (bMatrix[r][c]) back.drawRectangle({ x: bQrX + c*bMs, y: bQrY + (bMc-1-r)*bMs, width: bMs, height: bMs, color: NAVY });
-      }
-
-      // === Web text in copper at bottom ===
-      const bWebText = CONFIG.WEBSITE.toUpperCase();
-      const bWebSize = 7;
-      const bLetterSpace = 1.0;
-      let bWebWidth = 0;
-      for (const ch of bWebText) bWebWidth += ast.fonts.barlowSemi.widthOfTextAtSize(ch, bWebSize) + bLetterSpace;
-      bWebWidth -= bLetterSpace;
-      let bwx = (pageW - bWebWidth) / 2;
-      const bwy = trimBottomY + 5 * MM;
-      for (const ch of bWebText) {
-        back.drawText(ch, { x: bwx, y: bwy, size: bWebSize, font: ast.fonts.barlowSemi, color: COPPER });
-        bwx += ast.fonts.barlowSemi.widthOfTextAtSize(ch, bWebSize) + bLetterSpace;
-      }
+      const bWm = 42 * MM;
+      back.drawImage(ast.imago, { x: (pageW - bWm) / 2, y: (pageH - bWm) / 2, width: bWm, height: bWm, opacity: 0.08 });
+      const bbLogoW = 36 * MM;
+      const bbLogoH = bbLogoW / (ast.logo.width / ast.logo.height);
+      back.drawImage(ast.logo, { x: (pageW - bbLogoW) / 2, y: (pageH - bbLogoH) / 2, width: bbLogoW, height: bbLogoH });
 
       drawLanyardSlot(back, pageW, pageH, bleed, PDFLib);
       drawCropMarks(back, pageW, pageH, bleed, PDFLib);
@@ -1106,6 +1007,10 @@
       const cx = pageW / 2;          // horizontal center
       const sideMargin = 8 * MM;
 
+      // === IMAGO watermark (faint, brand texture — same gesture as la Cara A) ===
+      const swm = 62 * MM;
+      page.drawImage(ast.imago, { x: cx - swm / 2, y: pageH / 2 - swm / 2, width: swm, height: swm, opacity: 0.08 });
+
       // === IMAGO at top, centered ===
       const imagoSize = 26 * MM;
       const imagoY = pageH - 11 * MM - imagoSize;
@@ -1125,15 +1030,19 @@
         size: nameSize, font: ast.fonts.barlowSemi, color: WHITE
       });
 
-      // === TITLE — slate-light, centered ===
-      const titleStr = data.title || '';
-      const titleSize = fitTextSize(titleStr, ast.fonts.barlowMed, 10, screenNameMaxW, 7);
-      const titleWidth = ast.fonts.barlowMed.widthOfTextAtSize(titleStr, titleSize);
+      // === TITLE — tracked small caps, slate-light, centered ===
+      const titleStr = (data.title || '').toUpperCase();
+      const titleSize = fitTextSize(titleStr, ast.fonts.barlowMed, 9.5, screenNameMaxW, 7);
+      const sTLS = 1.6;
+      let sTitleW = 0;
+      for (const ch of titleStr) sTitleW += ast.fonts.barlowMed.widthOfTextAtSize(ch, titleSize) + sTLS;
+      if (titleStr.length) sTitleW -= sTLS;
+      let stx = cx - sTitleW / 2;
       const titleY = nameY - 5.5 * MM;
-      page.drawText(titleStr, {
-        x: cx - titleWidth / 2, y: titleY,
-        size: titleSize, font: ast.fonts.barlowMed, color: SLATE_LIGHT
-      });
+      for (const ch of titleStr) {
+        page.drawText(ch, { x: stx, y: titleY, size: titleSize, font: ast.fonts.barlowMed, color: SLATE_LIGHT });
+        stx += ast.fonts.barlowMed.widthOfTextAtSize(ch, titleSize) + sTLS;
+      }
 
       // === TEAL ACCENT — centered ===
       const accentW = 16 * MM;
@@ -1253,8 +1162,16 @@
       ctx.fillStyle = NAVY; ctx.fillRect(0, 0, W, H);
       ctx.textAlign = 'center';
 
-      // Imago at top
+      // Imago at top (also used as the faint watermark)
       const imago = await loadImageEl('./assets/imago_print.png');
+
+      // Imago watermark (faint, brand texture — same gesture as la Cara A)
+      ctx.save();
+      ctx.globalAlpha = 0.08;
+      const wmS = Math.round(W * 0.62);
+      ctx.drawImage(imago, cx - wmS / 2, Math.round(H / 2 - wmS / 2), wmS, wmS);
+      ctx.restore();
+
       const imgSize = Math.round(W * 0.34);
       const imgY = Math.round(H * 0.085);
       ctx.drawImage(imago, cx - imgSize / 2, imgY, imgSize, imgSize);
@@ -1270,16 +1187,18 @@
       ctx.fillStyle = WHITE;
       ctx.fillText(name, cx, y);
 
-      // Title (auto-shrink to fit)
-      const title = data.title || '';
-      let titleSize = 40;
+      // Title (uppercase tracked small caps, auto-shrink to fit)
+      const title = (data.title || '').toUpperCase();
+      const titleTrack = 4;
+      const titleTrackedW = () => { let w = 0; for (const ch of title) w += ctx.measureText(ch).width; return w + titleTrack * Math.max(0, title.length - 1); };
+      let titleSize = 38;
       ctx.font = '500 ' + titleSize + 'px "Barlow Condensed", sans-serif';
-      while (titleSize > 26 && ctx.measureText(title).width > sideMax) {
+      while (titleSize > 24 && titleTrackedW() > sideMax) {
         titleSize -= 1; ctx.font = '500 ' + titleSize + 'px "Barlow Condensed", sans-serif';
       }
       y += 70;
       ctx.fillStyle = SLATE_LIGHT;
-      ctx.fillText(title, cx, y);
+      drawCenteredTracked(ctx, title, cx, y, titleTrack);
 
       // Teal accent
       y += 50;
