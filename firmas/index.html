@@ -338,24 +338,33 @@
   <script src="./lib/qrcode.js"></script>
   <script>
     // ====================================================================
-    // CONFIG · al desplegar en GitHub Pages la URL del imago se
-    // calcula automáticamente desde el origen actual. Si prefieres
-    // hard-codear una URL fija de producción, edítala aquí.
+    // CONFIG · URL FIJA DE PRODUCCIÓN. No derivar de window.location.
+    //
+    // La URL del logo queda horneada para siempre dentro de cada firma
+    // que el equipo copia y pega en su cliente de correo. Si se calcula
+    // desde el origen actual, abrir el generador desde file://, un fork
+    // o localhost produce una firma que nace rota.
+    //
+    // AVISO: assets/logo.png sostiene firmas de correo YA repartidas.
+    // No renombrar, no mover, no borrar. Tampoco privatizar ni renombrar
+    // el repo o la organización: apagaría GitHub Pages y rompería
+    // retroactivamente las firmas de todo el equipo. Para cambiar el
+    // diseño, publicar una ruta nueva y dejar la vieja en su lugar.
     // ====================================================================
     const CONFIG = {
-      LOGO_URL: (function () {
-        const base = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '');
-        return base + '/assets/logo.png';
-      })(),
-      IMAGO_URL: (function () {
-        const base = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '');
-        return base + '/assets/imago.png';
-      })(),
-      ICON_BASE: (function () {
-        return window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '') + '/assets/';
-      })(),
+      LOGO_URL: 'https://aditum-consulting.github.io/firmas/firmas/assets/logo.png',
       WEBSITE: 'www.aditumconsulting.com',
       WEBSITE_URL: 'https://www.aditumconsulting.com'
+    };
+
+    // Iconos de contacto embebidos en base64 (0.3-2 KB c/u, la misma
+    // escala que el QR). Van embebidos y no por URL para que la firma
+    // dependa de una sola descarga remota, el logo, en vez de cinco.
+    const ICONS = {
+      mobile: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmJLR0QA/wD/AP+gvaeTAAAA6klEQVRoge2ZwQ2CQBBFP8YTJVABXLUdO6ACLUAroAPb8bxUQAle8WJCjEZmxoHJxv/OuzBv+dkDHyCxFNKFVXu8AkWz5DATYxq6y0Gycit/aNEA2BknUiI+V2wWnGIVFF/ghTuA3nMQADWAUrvJKtAP3Xlv3PuRqj3dYIho9hGiQDQUiIYC0VAgGgpEQ4FoKBANBaKhQDQUiIYC0VAgGgpEk72A9efuG7oCRF5gzOEmoCtA5AXGHIzQxJjkJzsmr7e6CXhlWkv2EcpewBqh+tlpeVJbNlkFSqzWGX/nnyKkuSZ/xe+aJUvzAB9oIEC4sF3jAAAAAElFTkSuQmCC',
+      phone: 'data:image/png;base64,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',
+      mail: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmJLR0QA/wD/AP+gvaeTAAADlklEQVRoge2XXWhbZRjHf89JY8rED8aCzek2BRkM1BsLgsMqMkTcxYSJ4JWIH5tN0+nFCk1S2RGWRHA3s0lWJ4p4442C9sLdDEWpCEJvRBljflx0OXFrLag42ubj8aLWnqRpcpKetFPO7/L/nvd9/3/Oe57nvODj4+Pj4zWRobGBcHS0b7t9rBKOjvZFhsYGGo1JvWAOj00hxhOiVBW9DLLUfYvN0JAg+1Qw0Op5O/fGYedoTYC+kXjYqDCLSGhrTbpDYHlZS3fO5d/8dVUzah4o614MCWy9NXeoYPRooN+pNThC8e9B7qmfizCLMt9Vh2uudqHsWe9Pf7BzmXudSk+D2Y3OvKDsBf3EzmVeBdQzs3X7mLHESZSTGwyv89YgQA2/A7c5FjgeiSVuN5fnX5w5d67Uuc8GWFaPOV/Ko/pSja76JyK3bDTN2GgAANGfEXmnVuLZYnDX+Z0j1q2b8evkjhMnbo7MlT6tN6/CBwI/NpvbPICK2tnUMYTX60YO9laXpne/nOxvOK8NwtHRvsBi6EtBD9Vt/lYxm35ORZoe1+YB/lnJzqYt4AWgvCbLfdWATpux+P52Ta+yZ2T87iDBr1B1NqmKoFE7l3kFF9+amwAA2Ln0e4g+BVx3yHeh8rUZTT7k3vYKu0eSD1Sq1W8Q9jnkRVF9ppDLnHW7jusAAHY2M2UY8igw55B3InqhP5Z82u06Zix+uFrVL4CwQ15A5bFCPvNRO57aCgBwZSL1bcAwHkS57JBDqvqhGU1GW803hxPPo/IxsMMh/0LVOGDnU9Pt+mk7AMDsxKmfykEGEZlxyAFEc+Zw/AwNGiQrNd4C3qW2fH9nVGTQPnvqUideOgoAcO1M+mqld+kRRT6r83k8Eku8P3D0aPBfybJ6zFjy7XUNSvXConHT4JXJVKFTHx0HALh6+vRfxXDwyWa9olmNj5R/O7QwYf2xGQ+tOnFrLKtsw7FINHFNhKRj5GCvlj5nMQTUlElUSRVz6deKHvySbOoNONBiPj0uIkNAZU3VgXU1XmSomE+P49H/lFcBAChkU5OIHqG2V6xyHdEjhWxq0ss9PQ0AG/aKBVQet7OZKa/38zwArOsVHdd4N3QlAKz0ihKlh0taOtBpjXfD5qtQE5x3127RtTewVfgBths/wHbznw/QqozuN4cTMy2e6TZN79ytAuwA7vfOi/f8H4+QXmx8I7wR0Ivb7cDHx8fH58bib6LKPqh8iIUCAAAAAElFTkSuQmCC',
+      web: 'data:image/png;base64,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'
     };
 
     // Microetiqueta del QR, adaptada al idioma seleccionado
@@ -461,7 +470,7 @@
       function row(iconName, alt, content) {
         return '<tr>'
           + '<td style="padding:3px 10px 3px 0;vertical-align:middle;width:' + (ICON_SIZE + 2) + 'px;">'
-          +   '<img src="' + CONFIG.ICON_BASE + 'icon-' + iconName + '.png" alt="' + alt + '" width="' + ICON_SIZE + '" height="' + ICON_SIZE + '" style="display:block;border:0;width:' + ICON_SIZE + 'px;height:' + ICON_SIZE + 'px;">'
+          +   '<img src="' + ICONS[iconName] + '" alt="' + alt + '" width="' + ICON_SIZE + '" height="' + ICON_SIZE + '" style="display:block;border:0;width:' + ICON_SIZE + 'px;height:' + ICON_SIZE + 'px;">'
           + '</td>'
           + '<td style="padding:3px 0;vertical-align:middle;">' + content + '</td>'
           + '</tr>';
@@ -484,7 +493,10 @@
 
       // Banner: full logo
       html +=     '<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;width:' + TOTAL_W + 'px;">';
-      html +=       '<tr><td style="padding:0;"><img src="' + CONFIG.LOGO_URL + '" alt="Aditum Consulting" width="298" height="55" style="display:block;border:0;width:298px;height:55px;"></td></tr>';
+      // El style tipografía/color aplica al texto alternativo: si el
+      // cliente bloquea la imagen, degrada a wordmark en color de marca
+      // en vez de a un icono roto.
+      html +=       '<tr><td style="padding:0;"><img src="' + CONFIG.LOGO_URL + '" alt="Aditum Consulting" width="298" height="55" style="display:block;border:0;width:298px;height:55px;font-family:\'Bahnschrift SemiBold\',\'Bahnschrift\',\'Segoe UI\',Arial,sans-serif;font-weight:600;font-size:16pt;line-height:55px;color:' + NAVY + ';"></td></tr>';
       html +=     '</table>';
 
       // Long horizontal rule
@@ -632,12 +644,20 @@
       flashStatus(currentLang === 'es' ? '✓ Datos cargados' : '✓ Data loaded');
     }
 
-    // Local-file warning
-    if (window.location.protocol === 'file:') {
-      const bar = document.getElementById('warn-bar');
-      bar.classList.add('show');
-      bar.textContent = 'Modo local detectado (file://). El imago no cargará en correos hasta desplegar la app en GitHub Pages u otro host. La firma sí se previsualiza correctamente aquí.';
-    }
+    // Sonda de salud del logo. Es la única pieza de la firma que se
+    // descarga en remoto, así que si esa URL deja de responder lo mejor
+    // es enterarse aquí y no por un correo ya enviado. No bloquea la
+    // app: avisa y deja decidir.
+    (function probeLogo() {
+      const probe = new Image();
+      probe.onerror = function () {
+        const bar = document.getElementById('warn-bar');
+        bar.classList.add('show');
+        bar.textContent = 'El logo no responde en ' + CONFIG.LOGO_URL
+          + ' · La firma se copiará con la imagen rota. Avisa antes de usarla.';
+      };
+      probe.src = CONFIG.LOGO_URL;
+    })();
 
     // Wire up
     ['name', 'email', 'mobile1', 'mobile2', 'office', 'linkedin', 'title-custom-es', 'title-custom-en'].forEach(id => {

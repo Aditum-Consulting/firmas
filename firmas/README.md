@@ -30,7 +30,19 @@ Una regla horizontal teal-deep de ancho completo separa el banner del cuerpo. Un
 3. En el repo: Settings → Pages → Source: Deploy from a branch. Branch: `main`. Folder: `/ (root)`. Save.
 4. Esperar uno o dos minutos. La app queda en `https://[org].github.io/[repo]/`.
 
-Las URLs del logotipo y del imago se calculan automáticamente desde el origen, así que no hace falta editar código al desplegar. Para hard-codear URLs fijas de producción, editar el bloque `CONFIG` al inicio del `<script>` en `index.html`.
+La URL del logotipo está hard-codeada en el bloque `CONFIG` al inicio del `<script>` de `index.html`, apuntando a `https://aditum-consulting.github.io/firmas/firmas/assets/logo.png`. No se deriva de `window.location` a propósito: esa URL queda horneada dentro de cada firma que el equipo pega en su cliente de correo, así que si se calculara desde el origen actual, abrir el generador desde `file://`, un fork o `localhost` produciría firmas que nacen rotas.
+
+### Regla de estabilidad de assets
+
+`assets/logo.png` sostiene firmas de correo **ya repartidas y en uso**, con una vida útil de años. En consecuencia:
+
+- No renombrar, mover ni borrar `assets/logo.png`.
+- No renombrar el repositorio ni la organización, y no pasar el repo a privado: apaga GitHub Pages y rompe retroactivamente las firmas de todo el equipo.
+- Para rediseñar la firma, publicar el asset nuevo en una ruta nueva y **dejar la vieja en su lugar**.
+
+El generador incluye una sonda que verifica la URL del logo al cargar. Si deja de responder, aparece una barra de advertencia antes de que nadie copie una firma rota.
+
+Migrar a un dominio propio (`aditumconsulting.com`) es el siguiente paso natural y elimina la dependencia de GitHub. No es urgente: al configurar un dominio custom, GitHub redirige las URLs `github.io` con 301, así que las firmas ya repartidas siguen cargando.
 
 ## Uso por el equipo
 
@@ -75,6 +87,12 @@ Para añadir más puestos, editar el objeto `TITLES` en `index.html` y agregar l
 └── README.md            Este archivo
 ```
 
+Los cuatro `icon-*.png` viven además **copiados en base64** dentro de la constante `ICONS` de `index.html`. Los `.png` son la fuente de verdad, pero editarlos no cambia nada por sí solo: hay que re-inyectar el base64. Desde `firmas/`:
+
+```bash
+node -e 'const fs=require("fs");const m={mobile:"icon-mobile.png",phone:"icon-phone.png",mail:"icon-mail.png",web:"icon-web.png"};let s=fs.readFileSync("index.html","utf8");for(const[k,f]of Object.entries(m)){const d="data:image/png;base64,"+fs.readFileSync("assets/"+f).toString("base64");s=s.replace(new RegExp("(\\n\\s*"+k+": )\x27data:image/png;base64,[^\x27]*\x27"),"$1\x27"+d+"\x27")}fs.writeFileSync("index.html",s)'
+```
+
 ## Sistema de diseño · v2
 
 | Elemento | Tipografía | Tamaño | Color |
@@ -101,7 +119,15 @@ Probado en:
 - Gmail web y móvil: render nativo correcto.
 - Apple Mail (macOS, iOS): import directo del `.html` descargado.
 
-El logotipo se referencia por URL pública del repo, no como base64, porque Outlook desktop a veces descarta imágenes inline base64 grandes. El QR sí va embebido base64 porque su tamaño es chico (~2KB) y la compatibilidad es estable.
+### Dependencias remotas de la firma
+
+La firma emitida contiene **una sola** imagen remota: el logotipo. Todo lo demás va embebido en base64 (QR ~2KB, y los cuatro iconos de contacto, de 0.3 a 2KB cada uno). El logotipo se queda por URL porque Outlook desktop a veces descarta imágenes inline base64 grandes; los assets chicos tienen compatibilidad estable, así que embeberlos reduce de cinco descargas remotas a una.
+
+El `<img>` del logotipo lleva estilos de tipografía y color además de los de tamaño. Eso aplica al texto alternativo: si el cliente bloquea la imagen, la firma degrada a un wordmark "Aditum Consulting" en navy en vez de a un icono roto.
+
+### Pegar en Outlook desktop embebe el logotipo
+
+Al pegar la firma como HTML enriquecido en el editor de firmas de Outlook desktop, Outlook descarga las imágenes remotas y guarda una copia local en `%APPDATA%\Microsoft\Signatures\<nombre>_files\`. A partir de ese momento esa firma ya no depende de la URL. Por eso conviene pegar en el editor de firmas y no guardar el `.html` suelto. En Gmail y Outlook web el logotipo permanece remoto.
 
 ## Privacidad
 
