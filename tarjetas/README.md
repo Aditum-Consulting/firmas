@@ -1,96 +1,92 @@
-# Aditum Card & Badge Generator · v5.0
+# Aditum Card & Badge Generator · v6.0
 
-Generador unificado de tarjetas de presentación y gafetes de credencial para el equipo Aditum. App estática HTML/CSS/JavaScript que produce PDFs listos para imprenta. Sin backend, sin build step, sin dependencias en runtime más allá de las librerías incluidas.
+Generador unificado de tarjetas de presentación, gafetes de credencial y tarjeta de pantalla para el equipo Aditum. App estática HTML/CSS/JavaScript que produce PDFs listos para imprenta y un PNG para el celular. Sin backend, sin build step, sin dependencias en runtime más allá de las librerías incluidas.
 
-## Filosofía de diseño · "Imago Anchor"
+## Filosofía de diseño · caras de función separada
 
-El símbolo Aditum (triángulo con gradient navy-amber-teal y partículas) es el activo de marca más distintivo, y el sistema lo trata como protagonista visual, no como decoración secundaria.
+Cada pieza separa **marca** de **información**. La marca va en navy sólido con el lockup Aditum (imago + wordmark) solo, sin texto. La información va en blanco, ordenada en una retícula, con el nombre como protagonista tipográfico.
 
-**Tarjeta:** imago grande (34mm) como ancla del lado izquierdo. Bloque tipográfico con eje vertical centrado del lado derecho. Reverso navy con logo completo (imago + wordmark) y QR vCard.
+Las piezas no llevan marca de agua del imago: un imago fantasma detrás del imago del lockup, misma forma y mismo sentido, se lee como doble impresión o registro corrido.
 
-**Gafete:** foto del empleado domina la mitad superior. Línea teal y nombre debajo. Logo pequeño en footer. Reverso navy con logo completo y QR grande para escaneo a distancia.
+## Sistema visual
 
-## Sistema visual unificado
-
-Tarjeta y gafete comparten **idioma visual** sin replicar composición:
-
-- **Paleta:** navy `#0A2E5C`, teal-bright `#2A8B9F`, copper `#B8704A`, slate `#5A6B7D`, slate-light `#8895A4`
-- **Tipografía:** Barlow Condensed (SemiBold/Medium/Regular) + Open Sans (Regular/SemiBold), ambas OFL embebidas en el PDF
-- **Imago Aditum:** mismo asset 1600×1600 RGBA con anti-aliasing real, usado en frente de tarjeta y en reverso de ambos productos
-- **Línea teal accent:** elemento visual recurrente (14mm en tarjeta, 16mm en gafete)
-- **Etiquetas M./T./E./W.** en teal-bright como signature de los datos de contacto
-- **Wordmark reverse blanco sobre navy** en los reversos
-- **Web en copper** en todos los reversos, letterspaced uppercase
+- **Paleta:** navy `#0A2E5C`, teal-bright `#2A8B9F`, copper `#B8704A`, slate `#5A6B7D`, slate-light `#8895A4`, mist `#E8F0F2`.
+- **Texto chico sobre navy:** tintes mínimos que pasan 4.5:1 (WCAG AA): slate `#8D99A8` y copper `#C58A6B`. Los originales dan 4.42:1 y 3.5:1 sobre navy.
+- **Tipografía:** Barlow Condensed (SemiBold/Medium/Regular) + Open Sans (Regular/SemiBold), ambas OFL, embebidas en el PDF.
+- **Puesto** siempre en versalitas con tracking. **Web** en copper con tracking en las piezas navy.
+- **Tamaño mínimo de texto impreso:** 6 pt. Por debajo, Open Sans se empasta.
 
 ## Productos generados
 
-### Tarjeta de presentación (90 × 55 mm landscape)
+### Tarjeta de presentación (90 × 50 mm landscape)
 
 PDF de 2 páginas:
 
-- **Frente:** imago Aditum 34mm como ancla visual izquierda (con todas las partículas, gradient preservado). Bloque tipográfico a la derecha con eje vertical centrado: nombre 16pt Barlow Condensed SemiBold, puesto 9pt slate, línea teal 14×1.2pt, datos de contacto con etiquetas M./T./E./W. en teal-bright + texto en slate. El bloque se centra automáticamente sobre el eje del imago, ajustando su altura según cuántas filas de contacto tenga el usuario (3, 4 o 5 filas).
-- **Reverso:** navy sólido con logo completo (imago + ADITUM CONSULTING wordmark blanco) arriba, QR vCard 18×18mm centrado con respiración generosa, web URL copper letterspaced en footer.
+- **Cara A · marca:** navy sólido con el lockup blanco de 44 mm centrado.
+- **Cara B · información:** retícula 2×2 sobre blanco.
+  - Arriba a la izquierda, contacto con micro-iconos: celulares, teléfono fijo, correo y web. Solo aparecen los que tienen datos.
+  - Arriba a la derecha, lockup a color.
+  - Abajo a la izquierda, nombre (18 pt, se reduce hasta 11 pt para nombres largos) y puesto.
+  - Abajo a la derecha, QR vCard de 22 mm.
+  - La columna derecha se alinea a los **módulos visibles** del QR: el logo mide lo mismo que el QR, sus bordes derechos coinciden, y la base del QR coincide con la línea base del puesto. Sobre blanco el QR no lleva placa: la zona de silencio la dan el margen y el sangrado.
 
 ### Gafete de credencial (54 × 85.6 mm portrait, CR80)
 
-PDF de 2 páginas:
+PDF de 2 páginas. Los 9 mm superiores quedan libres en ambas caras para la perforación del lanyard.
 
-- **Frente:** foto del empleado 38×50.66mm (proporción 3:4) ocupa la mitad superior, dejando libre la zona del lanyard arriba. Línea teal 16mm debajo de la foto. Nombre 15pt centrado, puesto 9pt slate. Logo completo pequeño (18mm) en el footer.
-- **Reverso:** navy sólido con logo completo arriba (debajo de la zona del lanyard), nombre del empleado, QR vCard 28×28mm grande para escaneo a distancia, web copper en footer.
-- **Ranura del lanyard:** rectángulo guía 10×3mm centrado a 4.5mm del borde superior, incluido como línea gris fina en ambas páginas para que el impresor sepa dónde perforar.
+- **Frente · identidad:** lockup a color arriba, foto de 30 × 40 mm (3:4, misma proporción que el recorte, sin deformar) con marco teal, nombre y puesto debajo.
+- **Reverso · contacto:** navy con lockup blanco, nombre y puesto, QR vCard de 30 mm sobre placa blanca, microcopy "Escanea para añadir contacto" y web en copper.
+
+El QR va en el reverso porque ahí cabe grande. En el frente, junto a la foto, solo cabía a 15 mm y quedaba demasiado denso para escanearse. Repetir nombre y puesto atrás cubre el caso más común de un gafete: que se voltee en el lanyard.
 
 ### Tarjeta de pantalla (vertical, para mostrar en el celular)
 
-**PNG de 1080×1920** (full-HD vertical, ≈9:16), pensado para abrirse y mostrarse en la pantalla de un teléfono cuando conoces a alguien. El PNG es el formato natural para esto: se abre a pantalla completa al instante, se comparte por chat y hasta sirve de fondo de pantalla. No es para imprimir: no lleva sangrado ni marcas de corte. (Se ofrece también una descarga **PDF opcional** con el botón secundario, por si se prefiere ese formato.)
+**PNG de 1080×1920** (full-HD vertical, ≈9:16), pensado para abrirse en el teléfono cuando conoces a alguien. Se abre a pantalla completa al instante, se comparte por chat y sirve de fondo de pantalla. No es para imprimir: no lleva sangrado. Hay también una descarga **PDF opcional** (74 × 132 mm) con el botón secundario.
 
-- Fondo navy completo, imago Aditum arriba, nombre y puesto centrados, línea teal de acento.
-- **QR vCard grande (36mm)** como elemento dominante: la otra persona lo escanea con su cámara y guarda el contacto directo.
-- Microcopy "Escanea para añadir contacto" debajo del QR.
-- Teléfono principal y correo como referencia visual rápida (el QR ya contiene la vCard completa).
-- Web en copper en el footer.
-
-Es la base natural para una futura tarjeta digital con NFC o página web: el QR y el eventual chip apuntarían al mismo destino. Por ahora, es un PDF self-contained que cualquiera puede abrir y mostrar.
+- Fondo navy, imago arriba, nombre y puesto centrados, línea teal de acento.
+- **QR vCard grande** como elemento dominante.
+- Celular principal y correo como referencia rápida; si el correo es largo, se reduce para caber.
+- Web en copper en el pie.
 
 ## Especificaciones de imprenta
 
 | Parámetro | Tarjeta | Gafete |
 |---|---|---|
-| Trim final | 90 × 55 mm | 54 × 85.6 mm (CR80) |
-| Sangrado | 3 mm cada lado | 3 mm cada lado |
-| Canvas total | 96 × 61 mm | 60 × 91.6 mm |
-| Resolución | 300 DPI | 300 DPI |
-| Marcas de corte | 4 esquinas, 0.5pt | 4 esquinas, 0.5pt |
-| Ranura lanyard | — | 10 × 3 mm guía gris |
+| Tamaño final (TrimBox) | 90 × 50 mm | 54 × 85.6 mm (CR80) |
+| Sangrado (BleedBox) | 3 mm por lado | 3 mm por lado |
+| Página total | 96 × 56 mm | 60 × 91.6 mm |
+| Imágenes | ≥ 300 DPI | ≥ 300 DPI |
+| Marcas de corte | ninguna dibujada; corte en TrimBox | ninguna dibujada; corte en TrimBox |
+| Ranura lanyard | — | la perfora el impresor; 9 mm superiores libres |
 | Espacio de color | sRGB | sRGB |
-| Fuentes | Embebidas en PDF | Embebidas en PDF |
-| QR | Vector (no rasterizado) | Vector (no rasterizado) |
-| Páginas | 2 (frente/reverso) | 2 (frente/reverso) |
+| Fuentes | embebidas | embebidas |
+| QR | 22 mm, vector | 30 mm en el reverso, vector |
+| Páginas | 2 (A marca / B info) | 2 (frente / reverso) |
 
-**Nota para el impresor:** PDF en sRGB. Convertir a CMYK con perfil FOGRA39 o equivalente al imprimir. Marcas de corte ya incluidas. En el gafete, el rectángulo punteado superior indica la ranura del lanyard.
+**Nota para el impresor:** PDF en sRGB con 3 mm de sangrado; convertir a CMYK con FOGRA39 o equivalente. El tamaño de corte va en el TrimBox del PDF y no lleva marcas dibujadas: se agregan en la imposición. En el gafete, perforar la ranura del lanyard al centro del borde superior con troquel estándar.
+
+**Por qué no hay marcas dibujadas:** la página es exactamente trim + sangrado, así que las marcas no caben fuera del sangrado. Dentro de él, si el corte se corre, asoman como rayitas negras en la orilla de la tarjeta.
 
 ## Foto del empleado (solo gafete)
 
-El usuario sube su foto (JPG o PNG, idealmente vertical o cuadrada, mínimo 300×400px). La app la **recorta automáticamente** a proporción 3:4 portrait, la convierte a JPEG a 600×800 (2x retina) y la embebe en el PDF. Si el usuario no sube foto, el gafete usa el imago Aditum como fallback institucional.
+El usuario sube su foto (JPG o PNG, idealmente vertical, mínimo 300×400 px). La app la **recorta automáticamente** a 3:4, la convierte a JPEG de 600×800 y la embebe en el PDF a 30 × 40 mm (≈ 500 DPI). Sin foto, el marco muestra el imago Aditum en vez de una caja vacía.
 
-La foto solo se guarda en memoria del navegador durante la sesión. Al cerrar la pestaña, se borra.
+La foto solo vive en la memoria del navegador durante la sesión. No se guarda con el perfil.
 
-## Despliegue en GitHub Pages
+## Despliegue
 
-1. Crear repositorio (recomendado: `aditum-consulting/cards-and-badges`).
-2. Subir el contenido completo al repo.
-3. Settings → Pages → Source: Deploy from a branch. Branch: `main`. Folder: `/ (root)`.
-4. A los dos minutos: `https://[org].github.io/[repo]/`.
+La app vive en este repo, en la carpeta `tarjetas/`, servida por GitHub Pages en `https://aditum-consulting.github.io/firmas/tarjetas/`.
 
 ## Uso por el equipo
 
 1. Abrir la URL pública.
-2. Elegir **producto**: Tarjeta o Gafete.
+2. Elegir **producto**: Tarjeta, Gafete o Pantalla.
 3. Elegir **idioma**: ES o EN.
 4. Llenar datos. Si el producto es Gafete, subir foto.
-5. Click en `Descargar PDF para imprenta`.
-6. Mandar el PDF al impresor.
+5. Click en `Descargar PDF para imprenta` (o `Descargar PNG para celular` en Pantalla).
+6. Mandar el PDF al impresor. **Antes de imprimir un lote, escanear el QR con un celular** desde la pantalla o una prueba impresa.
 
-Nombre del archivo: `aditum_tarjeta_[Nombre]_[es|en]_imprenta.pdf` o `aditum_gafete_[Nombre]_[es|en]_imprenta.pdf`.
+Nombre del archivo: `aditum_tarjeta_[Nombre]_[es|en]_imprenta.pdf`, `aditum_gafete_[Nombre]_[es|en]_imprenta.pdf`, `aditum_pantalla_[Nombre]_[es|en].png`. Los acentos se transliteran (`María` → `Maria`).
 
 ## Puestos predefinidos
 
@@ -104,17 +100,19 @@ Nombre del archivo: `aditum_tarjeta_[Nombre]_[es|en]_imprenta.pdf` o `aditum_gaf
 | `manager-sr` | Gerente Sr. | Senior Manager |
 | `custom` | personalizado por el usuario | personalizado por el usuario |
 
-## Estructura del repo
+## Estructura
 
 ```
-.
+tarjetas/
 ├── index.html                       App completa
 ├── assets/
-│   ├── logo.png                     Logo navy wordmark
-│   ├── logo_white.png               Logo wordmark blanco (preview)
-│   ├── logo_print_white.png         Logo blanco hi-res para PDF
-│   ├── imago.png                    Imago 160×160 app header
-│   ├── imago_print.png              Imago 800×800 para PDF
+│   ├── logo.png                     Lockup navy (preview)
+│   ├── logo_white.png               Lockup blanco (preview)
+│   ├── logo_print_color.png         Lockup a color hi-res para PDF (cara B, frente del gafete)
+│   ├── logo_print_white.png         Lockup blanco hi-res para PDF (piezas navy)
+│   ├── logo_print.png               Lockup hi-res (sin uso en el PDF actual)
+│   ├── imago.png                    Imago 160×160, header y preview
+│   ├── imago_print.png              Imago 1600×1600 para PDF y PNG
 │   ├── icon-mobile.png              Iconos smartphone, handset, sobre, globo
 │   ├── icon-phone.png               (48×48 RGBA teal-deep)
 │   ├── icon-mail.png
@@ -134,28 +132,56 @@ Nombre del archivo: `aditum_tarjeta_[Nombre]_[es|en]_imprenta.pdf` o `aditum_gaf
 
 ## QR vCard 3.0
 
-Ambos productos llevan QR del reverso que codifica una vCard 3.0 completa:
+Todos los productos llevan un QR que codifica la vCard completa:
 
 ```
 BEGIN:VCARD
 VERSION:3.0
-FN:[Nombre]
+FN:[Nombre completo]
+N:[Apellidos];[Nombres];;;
 ORG:Aditum Consulting
 TITLE:[Puesto]
-TEL;TYPE=CELL,VOICE:[Celular]
-TEL;TYPE=CELL,VOICE:[Celular alterno]
-TEL;TYPE=WORK,VOICE:[Teléfono fijo]
+TEL;TYPE=CELL:[Celular]
+TEL;TYPE=CELL:[Celular alterno]
+TEL;TYPE=WORK:[Teléfono fijo]
 EMAIL;TYPE=WORK:[Correo]
 URL:https://www.aditumconsulting.com
 URL;TYPE=LinkedIn:[LinkedIn]
 END:VCARD
 ```
 
-QR generado como **vector** (no rasterizado) — escala perfectamente a cualquier resolución de imprenta. El QR del gafete es ~2× más grande que el de la tarjeta (28mm vs 15mm) porque la distancia de escaneo del gafete es mayor.
+`N` separa apellidos de nombres con una heurística para nombres hispanos: los dos últimos apellidos forman el apellido, y las partículas (de, del, la…) se pegan al apellido que les sigue. Solo afecta cómo ordena el teléfono el contacto; el nombre que se ve es `FN`.
+
+### Densidad del QR
+
+Una vCard completa pesa entre 300 y 450 bytes, lo que da un QR de 61 a 73 módulos. Cada byte de más agranda el QR y encoge sus módulos. Por eso:
+
+- La vCard va **ligera**: sin `;VOICE` ni campos redundantes.
+- La corrección de errores es **L**. En impresión limpia rinde más tener ~8 módulos menos (módulos más grandes) que la redundancia extra de M.
+- El QR se dibuja como **un solo trazo vectorial**, no como un rectángulo por módulo. Los rectángulos sueltos dejan hilos blancos entre módulos al rasterizar, y eso confunde a los lectores.
+
+| Pieza | Tamaño | Módulo (caso típico) | Módulo (caso extremo) |
+|---|---|---|---|
+| Tarjeta | 22 mm | 0.36 mm | 0.30 mm |
+| Gafete (reverso) | 30 mm | 0.49 mm | 0.41 mm |
+| Pantalla | 36 mm | 0.59 mm | 0.49 mm |
+
+El caso extremo es un nombre de cuatro palabras, tres teléfonos con extensión, un correo de 47 caracteres y LinkedIn. Para impresión se suele recomendar un módulo de 0.3 mm o más.
+
+### Por qué la vCard va dentro del QR y no en una URL
+
+Un QR que apunte a una URL con la vCard alojada bajaría a unos 30 módulos. Se descartó por cuatro razones:
+
+1. **Privacidad.** El repo es público. Alojar las vCards ahí publica los celulares de todo el equipo en un directorio navegable e indexable.
+2. **Autoservicio.** El generador corre en el navegador y no puede escribir al repo. Cada tarjeta nueva requeriría un commit.
+3. **Experiencia.** En Android, un `.vcf` por URL se descarga como archivo; una vCard embebida abre directo "Añadir contacto". Además, la versión por URL necesita datos móviles al escanear.
+4. **Permanencia.** Una tarjeta impresa no se actualiza. Si la URL se cae, todas las tarjetas repartidas quedan con un QR muerto.
+
+Con los tamaños de arriba, la vCard embebida ya queda en módulos de 0.3 mm o más, así que el hosting no hace falta.
 
 ## Privacidad
 
-LinkedIn solo en el QR, no visible en la cara impresa. La foto del gafete solo se procesa client-side, nunca sale del navegador del usuario.
+LinkedIn solo va en el QR, no visible en la cara impresa. La foto del gafete solo se procesa en el navegador y nunca sale de él.
 
 ## Licencia
 
